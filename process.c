@@ -4,19 +4,7 @@
 #include <assert.h>
 #include <string.h>
 
-// need a function for create a process
-
-/* 
-typedef struct {
-    char *name;
-    int arrival;
-    int time_required; // check data type
-    int memory_KB;
-    int status;
-} process_t;
-*/
-
-process_t create_process(char *name, int arrival, int time_required int memory_KB)
+process_t *create_process(char *name, int arrival, int time_required, int memory_KB)
 {
     /* 
         makes a process by taking in necesary input and allocating memory to store 
@@ -69,7 +57,7 @@ void free_process(process_t *process)
     */
     if (process != NULL) 
     {
-        if (process->name != NULL) free(name);
+        if (process->name != NULL) free(process->name);
         free(process);
     }
 }
