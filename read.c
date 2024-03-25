@@ -3,16 +3,38 @@
 #include <assert.h>
 #include <string.h>
 #include <read.h>
+#include <proccess.h>
 
-// get arguments
-
-read_t *get_inputs(char const *argv[])
+process_t **read_processes(read_t inputs)
 {
-    // make read_t
+    /*
+        reads in processes from filename
+        returns an array of processes
+    */
+
+   process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
+   char letter = '\0';
+
+   while (letter)
+   {
+    // do something
+   }
+
+   return processes;
+}
+
+read_t *process_arguments(int argc, char const *argv[])
+{
+    /*
+        takes in command line arguments and returns a struct containing 
+            - filename of with processes
+            - memory strategy to use
+            - quantum
+    */
     read_t *inputs = (read_t *)malloc(sizeof(read_t));
     assert(inputs);
 
-    for (size_t i = 0; i < 6; i++)
+    for (size_t i = 0; i < argc; i++)
     {
         if (argv[i][1] == 'f')
         {
@@ -20,17 +42,15 @@ read_t *get_inputs(char const *argv[])
             assert(inputs->filename);
             strcpy(inputs->filename, argv[i+1]);
             assert(inputs->filename);
-            printf("filename: %s\n", inputs->filename);
         }
         else if (argv[i][1] == 'm')
         {
             inputs->memory = get_strategy(argv[i+1]);
-            printf("memory: %d\n", inputs->memory);
+            assert(inputs->memory != -1);
         }
         else if (argv[i][1] == 'q')
         {
             inputs->quantum = atoi(argv[i+1]);
-            printf("quantum: %d\n", inputs->quantum);
         }
     }
     return inputs;
@@ -38,6 +58,13 @@ read_t *get_inputs(char const *argv[])
 
 int get_strategy(char *strategy)
 {
+    /*
+        finds which search strategy we should use: 
+            - infinite
+            - first fit
+            - paged
+            - virtual
+    */
     char infinite[] = "infinite";
     char first_fit[] = "first fit";
     char paged[] = "paged";

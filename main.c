@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
     /*
         main function
     */
-    read_t *inputs = get_inputs(argv);
-    
+    read_t *inputs = process_arguments(argc, argv);
+
     return 0;
 }
