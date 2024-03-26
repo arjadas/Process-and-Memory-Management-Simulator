@@ -1,9 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <string.h>
-
-
 #define INFINITE 0
 #define FIRST_FIT 1
 #define PAGED 2
@@ -16,5 +11,6 @@ typedef struct
     int quantum;
 } read_t;
 
+FILE *open_file(char *file_path);
 read_t *process_arguments(int argc, char const *argv[]);
-int get_strategy(char *strategy);
+int get_strategy(const char *strategy);

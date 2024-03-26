@@ -1,8 +1,31 @@
-#include <process.h>
+#include "process.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+
+
+process_t **read_processes(char *filepath)
+{
+    /*
+        reads in processes from filename
+        returns an array of processes
+    */
+
+   process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
+   char letter = '\0';
+
+    FILE *fpt = fopen(filepath, "r");
+    assert(fpt);
+
+   while (letter = fgetc(fpt))
+   {
+        // do something
+        
+   }
+
+   return processes;
+}
 
 process_t *create_process(char *name, int arrival, int time_required, int memory_KB)
 {

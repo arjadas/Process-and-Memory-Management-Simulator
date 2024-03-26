@@ -1,27 +1,8 @@
+#include "read.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include <read.h>
-#include <proccess.h>
-
-process_t **read_processes(read_t inputs)
-{
-    /*
-        reads in processes from filename
-        returns an array of processes
-    */
-
-   process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
-   char letter = '\0';
-
-   while (letter)
-   {
-    // do something
-   }
-
-   return processes;
-}
 
 read_t *process_arguments(int argc, char const *argv[])
 {
@@ -56,7 +37,7 @@ read_t *process_arguments(int argc, char const *argv[])
     return inputs;
 }
 
-int get_strategy(char *strategy)
+int get_strategy(const char *strategy)
 {
     /*
         finds which search strategy we should use: 

@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <string.h>
 
 #define FINISHED 0
 #define READY 1
@@ -19,3 +15,4 @@ process_t *create_process(char *name, int arrival, int time_required, int memory
 int change_status(process_t *process, int new_status);
 int get_status(process_t *process);
 void free_process(process_t *process);
+process_t **read_processes(char *filepath);

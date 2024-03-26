@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include <read.h>
+#include "read.h"
+#include "process.h"
 
 
 int main(int argc, char const *argv[])
