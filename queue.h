@@ -24,5 +24,7 @@ typedef struct
 queue_t *createQueue();
 int isEmpty(queue_t *queue);
 void enqueue(queue_t *queue, process_t *process);
+process_t *dequeue(queue_t *queue);
+void emptyQueue(queue_t *queue);
 
 #endif

@@ -11,7 +11,7 @@ queue_t *createQueue()
 
     if (queue == NULL)
     {
-        printf("%s", "Memory Allocation for queue failed");
+        printf("%s", "Memory Allocation for queue failed"); // is it a proper response?
         exit(EXIT_FAILURE);
     }
 
@@ -24,7 +24,6 @@ queue_t *createQueue()
 // function to check whether the queue is empty
 int isEmpty(queue_t *queue)
 {
-
     return (queue->head == NULL);
 }
 
@@ -37,7 +36,7 @@ void enqueue(queue_t *queue, process_t *process)
 
     if (newNode == NULL)
     {
-        printf("%s", "Memory Allocation for new node failed");
+        printf("%s", "Memory Allocation for new node failed"); // is it a proper response?
         exit(EXIT_FAILURE);
     }
 
@@ -54,4 +53,53 @@ void enqueue(queue_t *queue, process_t *process)
         queue->tail->next = newNode;
         queue->tail = newNode;
     }
+}
+
+// function to remove an element from the queue
+process_t *dequeue(queue_t *queue)
+{
+
+    if (isEmpty(queue))
+    {
+        printf("%s", "Queue is empty, nothing to dequeue"); // is it a proper response?
+    }
+
+    node_t *item_node = queue->head;
+
+    queue->head = queue->head->next;
+
+    if (queue->head == NULL)
+    { // there was only one element in the queue, so the tail needs to point to null too
+        queue->tail = NULL;
+    }
+
+    item_node->next = NULL;
+
+    process_t *data = item_node->data;
+
+    // deleting the content and freeing the node
+    item_node->data = NULL;
+    item_node->next = NULL;
+    free(item_node);
+
+    return data;
+}
+
+// function to destroy the queue
+void emptyQueue(queue_t *queue)
+{
+
+    if (isEmpty(queue))
+    {
+        printf("%s", "Queue already empty"); // is it a proper response?
+    }
+
+    while (!isEmpty(queue))
+    {
+        dequeue(queue);
+        // node is already getting free'd while dequeuing
+    }
+
+    // freeing the queue
+    free(queue);
 }
