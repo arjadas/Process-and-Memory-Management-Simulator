@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <string.h>
 
+
 read_t *process_arguments(int argc, char const *argv[])
 {
     /*

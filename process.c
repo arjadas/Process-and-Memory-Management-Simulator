@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+// #include "read.h"
 
-
-process_t **read_processes(char *filepath)
+process_t **read_processes(read_t *input)
 {
     /*
         reads in processes from filename
@@ -15,7 +15,7 @@ process_t **read_processes(char *filepath)
    process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
    char letter = '\0';
 
-    FILE *fpt = fopen(filepath, "r");
+    FILE *fpt = fopen(input->filename, "r");
     assert(fpt);
 
    while (letter = fgetc(fpt))

@@ -1,3 +1,6 @@
+#ifndef READ_H
+#define READ_H
+
 #include <stdio.h>
 #define INFINITE 0
 #define FIRST_FIT 1
@@ -14,3 +17,5 @@ typedef struct
 FILE *open_file(char *file_path);
 read_t *process_arguments(int argc, char const *argv[]);
 int get_strategy(const char *strategy);
+
+#endif
