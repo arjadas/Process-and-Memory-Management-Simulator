@@ -12,5 +12,3 @@ read.o: read.c read.h
 
 clean:
 	rm -f *.o allocate
-
-#for cleaning up output files
