@@ -1,9 +1,100 @@
-#include "read.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "read.h"
+#include "process.h"
 
+process_t **read_processes(read_t *input, int *num_processes)
+{
+    /*
+        reads in processes from filename
+        returns an array of processes
+    */
+
+    process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
+    process_t *process = create_process();
+
+    FILE *fpt = fopen(input->filename, "r");
+    assert(fpt);
+
+    enum Input column = ARRIVAL;
+    char *buffer = (char *)calloc(10, sizeof(char));
+    int i = 0;
+    char letter = '\0';
+
+    while ((letter = fgetc(fpt)) != EOF)
+    {
+        // if character is ' ' or '\n' then we are at the end of an input
+        if ((letter == '\n') && (column == MEMORY))
+        {
+            parse_value(process, buffer, column);
+            processes[*num_processes] = process; (*num_processes)++;
+            process = create_process();
+            reset_buffer(buffer, &i);
+            column = ARRIVAL;
+        }
+        else if (letter == ' ') // length of buffer
+        {
+            add_buffer(buffer, i, letter);
+            parse_value(process, buffer, column);
+            reset_buffer(buffer, &i);
+            column++;
+        }
+        else
+        {
+            add_buffer(buffer, i, letter); i++;
+        }
+    }
+    free(buffer);
+    return processes;
+}
+
+void add_buffer(char *buffer, int i, char letter)
+{
+    /*
+        only want to add letter to buffer if it is not white space
+    */
+    if ((letter != '\n') && (letter != ' ') && (letter != EOF))
+    {
+        printf("letter not white space\n");
+        buffer[i] = letter;
+    }
+}
+
+void parse_value(process_t *process, char *buffer, enum Input column)
+{
+    switch (column)
+    {
+    case ARRIVAL:
+        /* if arrival time, then turn into int and add to process */
+        int arrival = atoi(buffer);
+        process->arrival = arrival;
+        return;
+    case NAME:
+        process->name = strdup(buffer);
+        break;
+    case SERVICE_TIME:
+        int service_time = atoi(buffer);
+        process->service_time = service_time;
+        break;
+    case MEMORY:
+        int memory = atoi(buffer);
+        process->memory_KB = memory;
+        break;
+    default:
+        break;
+    } 
+}
+
+void reset_buffer(char *buffer, int *length)
+{
+    for (int i = 0; i < *length; i++)
+    {
+        buffer[i] = '\0';
+    }
+    *length = 0;
+}
 
 read_t *process_arguments(int argc, char const *argv[])
 {

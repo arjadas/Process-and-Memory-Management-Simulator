@@ -3,31 +3,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-// #include "read.h"
 
-process_t **read_processes(read_t *input)
-{
-    /*
-        reads in processes from filename
-        returns an array of processes
-    */
 
-   process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
-   char letter = '\0';
-
-    FILE *fpt = fopen(input->filename, "r");
-    assert(fpt);
-
-   while (letter = fgetc(fpt))
-   {
-        printf("char = %c\n", letter);
-        
-   }
-
-   return processes;
-}
-
-process_t *create_process(char *name, int arrival, int time_required, int memory_KB)
+process_t *create_process()
 {
     /* 
         makes a process by taking in necesary input and allocating memory to store 
@@ -36,19 +14,22 @@ process_t *create_process(char *name, int arrival, int time_required, int memory
 
     process_t *process = (process_t *)malloc(sizeof(process_t));
     assert(process);
-
-    // copy in name
-    process->name = (char *)malloc((strlen(name) + 1) * sizeof(char));
-    assert(name);
-    strcpy(process->name, name);
-    assert(name);
-
-    // now initialise clock time, time_required, memory_KB
-    process->arrival = arrival;
-    process->time_required= time_required;
-    process->memory_KB = memory_KB;
-    
     return process;
+}
+
+void print_processes(process_t **processes, int num_processes)
+{
+    for (int i = 0; i < num_processes; i++)
+    {
+        print_process(processes[i]);
+    }
+    
+}
+
+void print_process(process_t *process)
+{
+    printf("Process name: %s\n \tArrival time: %d\n\tService time: %d\n\tMemory required: %d\n", 
+        process->name, process->arrival, process->service_time, process->memory_KB);
 }
 
 int change_status(process_t *process, int new_status)
