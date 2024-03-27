@@ -18,7 +18,6 @@ typedef struct
 } queue_t;
 
 // prototypes
-
 queue_t *createQueue();
 int isEmpty(queue_t *queue);
 void enqueue(queue_t *queue, process_t *process);

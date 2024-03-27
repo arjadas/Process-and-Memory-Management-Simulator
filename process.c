@@ -20,7 +20,7 @@ process_t **read_processes(read_t *input)
 
    while (letter = fgetc(fpt))
    {
-        // do something
+        printf("char = %c\n", letter);
         
    }
 
