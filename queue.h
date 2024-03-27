@@ -1,18 +1,16 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-
-// node to store the process data
-
-typedef struct node;
-
-typedef struct
-{
-    process_t data;
-    struct node *next;
-} node_t;
+#include "process.h"
 
 // queue data structure
+typedef struct node node_t;
 
+struct node {
+	process_t *data;
+	node_t *next;
+};
+
+// queue data structure
 typedef struct
 {
     node_t *head;

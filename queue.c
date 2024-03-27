@@ -27,9 +27,12 @@ int isEmpty(queue_t *queue)
     return (queue->head == NULL);
 }
 
-// function to add a process to the queue
 void enqueue(queue_t *queue, process_t *process)
 {
+    /*
+        function to add an item to the queue
+        inputs: queue and a pointer to a process
+    */
 
     // creating a new node to store the new process
     node_t *newNode = (node_t *)malloc(sizeof(node_t));
@@ -55,13 +58,18 @@ void enqueue(queue_t *queue, process_t *process)
     }
 }
 
-// function to remove an element from the queue
 process_t *dequeue(queue_t *queue)
 {
-
+    /*
+        function to remove an element from the queue
+        inputs: a pointer to a queue
+        return: returns a pointer to the process removed from the queue
+    */
+    // perhaps we should return NULL instead?
     if (isEmpty(queue))
     {
         printf("%s", "Queue is empty, nothing to dequeue"); // is it a proper response?
+        return NULL;
     }
 
     node_t *item_node = queue->head;
@@ -69,7 +77,8 @@ process_t *dequeue(queue_t *queue)
     queue->head = queue->head->next;
 
     if (queue->head == NULL)
-    { // there was only one element in the queue, so the tail needs to point to null too
+    { 
+        // there was only one element in the queue, so the tail needs to point to null too
         queue->tail = NULL;
     }
 
@@ -78,6 +87,7 @@ process_t *dequeue(queue_t *queue)
     process_t *data = item_node->data;
 
     // deleting the content and freeing the node
+    // we might need to return the node itself instead... 
     item_node->data = NULL;
     item_node->next = NULL;
     free(item_node);
@@ -85,9 +95,11 @@ process_t *dequeue(queue_t *queue)
     return data;
 }
 
-// function to destroy the queue
 void emptyQueue(queue_t *queue)
 {
+    /*
+        function to destroy the queue
+    */
 
     if (isEmpty(queue))
     {
@@ -96,8 +108,8 @@ void emptyQueue(queue_t *queue)
 
     while (!isEmpty(queue))
     {
-        dequeue(queue);
         // node is already getting free'd while dequeuing
+        dequeue(queue);
     }
 
     // freeing the queue
