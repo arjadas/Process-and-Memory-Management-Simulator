@@ -69,7 +69,7 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         /* if arrival time, then turn into int and add to process */
         int arrival = atoi(buffer);
         process->arrival = arrival;
-        return;
+        break;
     case NAME:
         process->name = strdup(buffer);
         break;
