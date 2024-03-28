@@ -57,7 +57,6 @@ void add_buffer(char *buffer, int i, char letter)
     */
     if ((letter != '\n') && (letter != ' ') && (letter != EOF))
     {
-        printf("letter not white space\n");
         buffer[i] = letter;
     }
 }
@@ -75,7 +74,8 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         process->name = strdup(buffer);
         break;
     case SERVICE_TIME:
-        int service_time = atoi(buffer);
+        char *writeoff = NULL;
+        unsigned long int service_time = strtoul(buffer, &writeoff, 10);
         process->service_time = service_time;
         break;
     case MEMORY:

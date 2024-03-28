@@ -7,7 +7,7 @@
 typedef struct {
     char *name;
     int arrival;
-    int service_time; // check data type
+    unsigned long int service_time; // check data type
     int memory_KB;
     int status;
 } process_t;
