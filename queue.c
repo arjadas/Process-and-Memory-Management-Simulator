@@ -8,12 +8,7 @@ queue_t *createQueue()
 {
 
     queue_t *queue = (queue_t *)malloc(sizeof(queue_t));
-
-    if (queue == NULL)
-    {
-        printf("%s", "Memory Allocation for queue failed"); // is it a proper response?
-        exit(EXIT_FAILURE);
-    }
+    assert(queue);
 
     queue->head = NULL;
     queue->tail = NULL;
@@ -36,12 +31,7 @@ void enqueue(queue_t *queue, process_t *process)
 
     // creating a new node to store the new process
     node_t *newNode = (node_t *)malloc(sizeof(node_t));
-
-    if (newNode == NULL)
-    {
-        printf("%s", "Memory Allocation for new node failed"); // is it a proper response?
-        exit(EXIT_FAILURE);
-    }
+    assert(newNode);
 
     newNode->data = process;
     newNode->next = NULL;
@@ -65,6 +55,7 @@ process_t *dequeue(queue_t *queue)
         inputs: a pointer to a queue
         return: returns a pointer to the process removed from the queue
     */
+
     // perhaps we should return NULL instead?
     if (isEmpty(queue))
     {
@@ -77,7 +68,7 @@ process_t *dequeue(queue_t *queue)
     queue->head = queue->head->next;
 
     if (queue->head == NULL)
-    { 
+    {
         // there was only one element in the queue, so the tail needs to point to null too
         queue->tail = NULL;
     }
@@ -87,7 +78,7 @@ process_t *dequeue(queue_t *queue)
     process_t *data = item_node->data;
 
     // deleting the content and freeing the node
-    // we might need to return the node itself instead... 
+    // we might need to return the node itself instead...
     item_node->data = NULL;
     item_node->next = NULL;
     free(item_node);
