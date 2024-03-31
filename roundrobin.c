@@ -7,7 +7,7 @@ void roundRobin(process_t **processes, queue_t *queue, int num_process, int quan
     int remaining_process = num_process;
     int should_loop = TRUE;
     int process_remaining_time = 0;
-    process_t *current_process = NULL;
+    process_t *current_process;
 
     while (should_loop == TRUE)
     {
@@ -37,7 +37,7 @@ void roundRobin(process_t **processes, queue_t *queue, int num_process, int quan
         {
             change_status(current_process, FINISHED);
             remaining_process--;
-            printf("%d, %s, process-name = %s, proc-remaining = %d", simulation_time, current_process->status, current_process->name, process_remaining);
+            printf("%d, %s, process-name = %s, proc-remaining = %d", simulation_time, current_process->status, current_process->name, remaining_process);
 
             // no need to enqueue as process is finished
 
