@@ -2,6 +2,7 @@
 #include "process.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 // function to create a new queue
 queue_t *createQueue()

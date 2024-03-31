@@ -3,6 +3,7 @@
 
 #include "queue.h"
 #include "process.h"
+#include "queue.h"
 
 #define TRUE 1
 #define FALSE 2
