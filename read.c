@@ -29,6 +29,7 @@ process_t **read_processes(read_t *input, int *num_processes)
         if ((letter == '\n') && (column == MEMORY))
         {
             parse_value(process, buffer, column);
+            
             processes[*num_processes] = process; (*num_processes)++;
             process = create_process();
             reset_buffer(buffer, &i);

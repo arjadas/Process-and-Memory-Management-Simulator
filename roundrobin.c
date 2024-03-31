@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "roundrobin.h"
 
 void roundRobin(process_t **processes, queue_t *queue, int num_process, int quantum)
