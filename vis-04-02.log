@@ -1,0 +1,283 @@
+COMP30023 2024 Project 1 Before Deadline Tests (Feedback)
+v6, fix typo, last modified 29/03/24
+
+WARNING: No commit hash given
+
+Commit log:
+d187c52 2024-04-01T03:14:23+11:00: included the newly added files into the makefile and main.c file, changed the two-processes.txt file.
+4e7ad6f 2024-03-31T23:04:01+11:00: added roundrobin.o and queue.o to Makefile so now to will compile correctly
+bcbf199 2024-03-31T22:46:26+11:00: added #include's
+1fb2735 2024-03-31T22:16:21+11:00: edited some errors
+548ba08 2024-03-31T22:00:37+11:00: developed the round robin algorithm
+98792f6 2024-03-30T14:03:53+11:00: changed the verification of mallocs with assert function
+673e91f 2024-03-28T13:45:15+11:00: small typo on line 72
+4ab3891 2024-03-28T13:43:50+11:00: fixed bug for service_time so that we can store up to 2^(32)-1 integer values as per the spec
+e1dbfd7 2024-03-27T14:37:34+11:00: readin works perfectly, only issue is with service_memory integer overflow :(((
+fac6796 2024-03-27T12:25:54+11:00: testing read function
+f5f6f4f 2024-03-27T11:52:32+11:00: just fixed some subtle bugs in queue that occurred when i tried to compile the code
+2838f36 2024-03-27T00:35:20+11:00: updated the queue data structrue. added dequeue and emptyQueue. check proper response comments. Do we need any other functions?
+cf825f7 2024-03-26T23:02:57+11:00: created a queue data structure which can create a queue, add an element in a queue and check if a queue is empty. needs to include other features in it.
+2e71a57 2024-03-26T18:19:41+11:00: added 'clean' target function to makefile
+cfa4db3 2024-03-26T18:17:03+11:00: makefile seems to be working, watch out for the process.c and read.c files though
+7cfd889 2024-03-26T12:52:49+11:00: made a makefile
+3f3e291 2024-03-25T21:41:46+11:00: finishing up for tonight! started working on the new read in file
+06e2ed2 2024-03-25T21:20:57+11:00: added a read function, we can now setup which memory strategy to use
+698d94b 2024-03-25T20:20:11+11:00: made the process.c file
+66308bf 2024-03-25T11:41:25+11:00: made process struct
+7d649ae 2024-03-24T19:55:08+11:00: added a main function
+c0fac89 2024-03-19T20:33:59+11:00: new
+c21b6ea 2024-03-19T19:10:52+11:00: Create test.c
+
+5 dirty files found. Please do not commit object files. 0.5 from build quality.
+Dirty files are:
+./roundrobin.o
+./process.o
+./queue.o
+./main.o
+./read.o
+-----------------------------------
+
+1 executable files found. They will be removed.
+Executable files are:
+./allocate
+-----------------------------------
+
+0.5 from build quality.
+make -B && make clean (output suppressed)
+
+2 untracked files found. Make sure that your .gitignore works.
+Untracked files are:
+ M allocate
+ M main.o
+-----------------------------------
+
+make clean
+rm -f *.o allocate
+
+make
+gcc -Wall -o main.o main.c -c
+main.c: In function 'main':
+main.c:21:14: warning: format '%S' expects argument of type 'wchar_t *', but argument 2 has type 'char *' [-Wformat=]
+   21 |     printf("%S", "entering");
+      |             ~^   ~~~~~~~~~~
+      |              |   |
+      |              |   char *
+      |              int *
+      |             %s
+gcc -Wall -o read.o read.c -c
+gcc -Wall -o process.o process.c -c
+gcc -Wall -o roundrobin.o roundrobin.c -c
+roundrobin.c: In function 'roundRobin':
+roundrobin.c:33:26: warning: format '%s' expects argument of type 'char *', but argument 3 has type 'int' [-Wformat=]
+   33 |             printf("%d, %s, process-name = %s, remaining-time = %d", simulation_time, current_process->status, current_process->name, process_remaining_time);
+      |                         ~^                                                            ~~~~~~~~~~~~~~~~~~~~~~~
+      |                          |                                                                           |
+      |                          char *                                                                      int
+      |                         %d
+roundrobin.c:44:26: warning: format '%s' expects argument of type 'char *', but argument 3 has type 'int' [-Wformat=]
+   44 |             printf("%d, %s, process-name = %s, proc-remaining = %d", simulation_time, current_process->status, current_process->name, remaining_process);
+      |                         ~^                                                            ~~~~~~~~~~~~~~~~~~~~~~~
+      |                          |                                                                           |
+      |                          char *                                                                      int
+      |                         %d
+gcc -Wall -o queue.o queue.c -c
+gcc -Wall -o allocate main.o read.o process.o roundrobin.o queue.o
+
+make emits warning, 0.5 from build quality
+OK -- ./allocate found. Copying to clean working directory.
+
+Visible Tests
+Task 1 spec-q1 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P4
+ 	Arrival time: 0
+	Service time: 30
+	Memory required: 16
+Process name: P2
+Process name: P4
+ (HT)Arrival time: 0
+(HT)Service time: 30
+(HT)Memory required: 16
+Process name: P2
+--------------------------------------------------
+Task 1 two-proc-q1 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 100
+	Memory required: 2
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 100
+(HT)Memory required: 2
+Process name: P2
+--------------------------------------------------
+Task 1 two-proc-q3 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 100
+	Memory required: 2
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 100
+(HT)Memory required: 2
+Process name: P2
+--------------------------------------------------
+/test.sh: line 335:   123 Aborted                 timeout -k 2s "$to" $cmd < /dev/null > /tmp/out 2> /dev/null
+Task 2 fill-q3 (0.5): "./allocate -f /cases/task2/fill.txt -q 3 -m first-fit" Failed -- Return Code: 134
+/test.sh: line 335:   125 Aborted                 timeout -k 2s "$to" $cmd < /dev/null > /tmp/out 2> /dev/null
+Task 2 non-fit-q1 (0.3): "./allocate -f /cases/task2/non-fit.txt -q 1 -m first-fit" Failed -- Return Code: 134
+Task 2 left-q3 (0.5): "./allocate -f /cases/task2/retake-left.txt -q 3 -m first-fit" Failed -- Return Code: 134
+/test.sh: line 335:   127 Aborted                 timeout -k 2s "$to" $cmd < /dev/null > /tmp/out 2> /dev/null
+/test.sh: line 335:   129 Aborted                 timeout -k 2s "$to" $cmd < /dev/null > /tmp/out 2> /dev/null
+Task 2 running-q3 (0.2): "./allocate -f /cases/task2/consecutive-running.txt -q 3 -m first-fit" Failed -- Return Code: 134
+Task 3 simple-alloc-q3 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 3
+	Memory required: 4
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 3
+(HT)Memory required: 4
+Process name: P2
+--------------------------------------------------
+Task 3 simple-evict-q1 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P2
+ 	Arrival time: 0
+	Service time: 2
+	Memory required: 4
+Process name: P1
+Process name: P2
+ (HT)Arrival time: 0
+(HT)Service time: 2
+(HT)Memory required: 4
+Process name: P1
+--------------------------------------------------
+Task 3 internal-frag-q1 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P2
+ 	Arrival time: 0
+	Service time: 2
+	Memory required: 5
+Process name: P1
+Process name: P2
+ (HT)Arrival time: 0
+(HT)Service time: 2
+(HT)Memory required: 5
+Process name: P1
+--------------------------------------------------
+Task 4 no-evict-q3 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 24
+	Memory required: 2000
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 24
+(HT)Memory required: 2000
+Process name: P2
+--------------------------------------------------
+Task 4 virtual-evict-q1 (0.3): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 24
+	Memory required: 2048
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 24
+(HT)Memory required: 2048
+Process name: P2
+--------------------------------------------------
+Task 4 virtual-evict-alt-q1 (0.2): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 24
+	Memory required: 2044
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 24
+(HT)Memory required: 2044
+Process name: P2
+--------------------------------------------------
+Task 4 to-evict-q3 (0.5): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 32
+	Memory required: 2032
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 32
+(HT)Memory required: 2032
+Process name: P2
+--------------------------------------------------
+Task 5 spec-q1 (0.125): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P4
+ 	Arrival time: 0
+	Service time: 30
+	Memory required: 16
+Process name: P2
+Process name: P4
+ (HT)Arrival time: 0
+(HT)Service time: 30
+(HT)Memory required: 16
+Process name: P2
+--------------------------------------------------
+/test.sh: line 335:   171 Aborted                 timeout -k 2s "$to" $cmd < /dev/null > /tmp/out 2> /dev/null
+Task 5 non-fit-q3 (0.125): "./allocate -f /cases/task2/non-fit.txt -q 3 -m first-fit" Failed -- Return Code: 134
+Task 5 simple-alloc-q3 (0.125): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 3
+	Memory required: 4
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 3
+(HT)Memory required: 4
+Process name: P2
+--------------------------------------------------
+Task 5 to-evict-q3 (0.125): Failed -- Extra output in stdout
+--------------------------------------------------
+Process name: P1
+ 	Arrival time: 0
+	Service time: 32
+	Memory required: 2032
+Process name: P2
+Process name: P1
+ (HT)Arrival time: 0
+(HT)Service time: 32
+(HT)Memory required: 2032
+Process name: P2
+--------------------------------------------------
+
+Valgrind
+Task v1 valgrind-task1 (0): Skipped
+Task v3 valgrind-task3 (0): Skipped
+
+=============== START RESULTS TABLE ===============
+Task 1: Infinite Memory                       0
+Task 2: First Fit                             0
+Task 3: Paged Memory                          0
+Task 4: Virtual Memory                        0
+Task 5: Performance statistics                0
+Task 6: Build quality                         0
+Task 7: Quality of software practices         #CODE_QUALITY#
+Late penalty:                                 -15
+================ END RESULTS TABLE ================
