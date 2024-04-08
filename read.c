@@ -29,8 +29,9 @@ process_t **read_processes(read_t *input, int *num_processes)
         if ((letter == '\n') && (column == MEMORY))
         {
             parse_value(process, buffer, column);
-            
-            processes[*num_processes] = process; (*num_processes)++;
+
+            processes[*num_processes] = process;
+            (*num_processes)++;
             process = create_process();
             reset_buffer(buffer, &i);
             column = ARRIVAL;
@@ -44,7 +45,8 @@ process_t **read_processes(read_t *input, int *num_processes)
         }
         else
         {
-            add_buffer(buffer, i, letter); i++;
+            add_buffer(buffer, i, letter);
+            i++;
         }
     }
     free(buffer);
@@ -69,7 +71,7 @@ void parse_value(process_t *process, char *buffer, enum Input column)
     case ARRIVAL:
         /* if arrival time, then turn into int and add to process */
         int arrival = atoi(buffer);
-        process->arrival = arrival;
+        process->arrival_time = arrival;
         break;
     case NAME:
         process->name = strdup(buffer);
@@ -78,6 +80,13 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         char *writeoff = NULL;
         unsigned long int service_time = strtoul(buffer, &writeoff, 10);
         process->service_time = service_time;
+
+        // remaining time is equal to service time initially
+        process->remaining_time = service_time;
+
+        // setting status to not_set
+        process->status = NOT_SET;
+
         break;
     case MEMORY:
         int memory = atoi(buffer);
@@ -85,7 +94,7 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         break;
     default:
         break;
-    } 
+    }
 }
 
 void reset_buffer(char *buffer, int *length)
@@ -100,7 +109,7 @@ void reset_buffer(char *buffer, int *length)
 read_t *process_arguments(int argc, char const *argv[])
 {
     /*
-        takes in command line arguments and returns a struct containing 
+        takes in command line arguments and returns a struct containing
             - filename of with processes
             - memory strategy to use
             - quantum
@@ -112,19 +121,19 @@ read_t *process_arguments(int argc, char const *argv[])
     {
         if (argv[i][1] == 'f')
         {
-            inputs->filename = (char *)malloc(sizeof(char) * (strlen(argv[i+1]) + 1));
+            inputs->filename = (char *)malloc(sizeof(char) * (strlen(argv[i + 1]) + 1));
             assert(inputs->filename);
-            strcpy(inputs->filename, argv[i+1]);
+            strcpy(inputs->filename, argv[i + 1]);
             assert(inputs->filename);
         }
         else if (argv[i][1] == 'm')
         {
-            inputs->memory = get_strategy(argv[i+1]);
+            inputs->memory = get_strategy(argv[i + 1]);
             assert(inputs->memory != -1);
         }
         else if (argv[i][1] == 'q')
         {
-            inputs->quantum = atoi(argv[i+1]);
+            inputs->quantum = atoi(argv[i + 1]);
         }
     }
     return inputs;
@@ -133,7 +142,7 @@ read_t *process_arguments(int argc, char const *argv[])
 int get_strategy(const char *strategy)
 {
     /*
-        finds which search strategy we should use: 
+        finds which search strategy we should use:
             - infinite
             - first fit
             - paged
@@ -143,12 +152,14 @@ int get_strategy(const char *strategy)
     char first_fit[] = "first fit";
     char paged[] = "paged";
     char virtual[] = "virtual";
-    if (strcmp(strategy, infinite) == 0) return INFINITE;
-    if (strcmp(strategy, paged) == 0) return PAGED;
-    if (strcmp(strategy, first_fit) == 0) return FIRST_FIT;
-    if (strcmp(strategy, virtual) == 0) return VIRTUAL;
+    if (strcmp(strategy, infinite) == 0)
+        return INFINITE;
+    if (strcmp(strategy, paged) == 0)
+        return PAGED;
+    if (strcmp(strategy, first_fit) == 0)
+        return FIRST_FIT;
+    if (strcmp(strategy, virtual) == 0)
+        return VIRTUAL;
 
     return -1;
 }
-
-

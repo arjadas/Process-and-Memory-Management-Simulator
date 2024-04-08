@@ -4,11 +4,10 @@
 #include <assert.h>
 #include <string.h>
 
-
 process_t *create_process()
 {
-    /* 
-        makes a process by taking in necesary input and allocating memory to store 
+    /*
+        makes a process by taking in necesary input and allocating memory to store
         the process's information
     */
 
@@ -23,13 +22,12 @@ void print_processes(process_t **processes, int num_processes)
     {
         print_process(processes[i]);
     }
-    
 }
 
 void print_process(process_t *process)
 {
-    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n", 
-        process->name, process->arrival, process->service_time, process->memory_KB);
+    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d",
+           process->name, process->arrival_time, process->service_time, process->memory_KB);
 }
 
 int change_status(process_t *process, int new_status)
@@ -41,11 +39,21 @@ int change_status(process_t *process, int new_status)
     */
 
     int status = process->status;
-    if (status == FINISHED && new_status != FINISHED) return -1;
-    if (status == READY && new_status == FINISHED) return -1;
-    if (status == READY && new_status == RUNNING) process->status = new_status;
-    if (status == RUNNING && new_status == READY) process->status = new_status;
-    if (status == RUNNING && new_status == FINISHED) process->status = new_status;
+
+    // very first initialisation
+    if (status == NOT_SET)
+        process->status = new_status;
+
+    if (status == FINISHED && new_status != FINISHED)
+        return -1;
+    if (status == READY && new_status == FINISHED)
+        return -1;
+    if (status == READY && new_status == RUNNING)
+        process->status = new_status;
+    if (status == RUNNING && new_status == READY)
+        process->status = new_status;
+    if (status == RUNNING && new_status == FINISHED)
+        process->status = new_status;
     return new_status;
 }
 
@@ -54,14 +62,36 @@ int get_status(process_t *process)
     return process->status;
 }
 
+char *get_status_string(process_t *process)
+{
+    switch (process->status)
+    {
+    case READY:
+        return "READY";
+        break;
+
+    case RUNNING:
+        return "RUNNING";
+        break;
+
+    case FINISHED:
+        return "FINISHED";
+        break;
+
+    default:
+        return "UNKNOWN";
+    }
+}
+
 void free_process(process_t *process)
 {
     /*
         frees the string stored in process then frees the process itself
     */
-    if (process != NULL) 
+    if (process != NULL)
     {
-        if (process->name != NULL) free(process->name);
+        if (process->name != NULL)
+            free(process->name);
         free(process);
     }
 }
