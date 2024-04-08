@@ -11,17 +11,13 @@ void roundRobin(process_t **processes, queue_t *queue, int num_process, int quan
     int remaining_process = num_process;
     int should_loop = TRUE;
     process_t *current_process = NULL;
-    // process_t *previous_process = NULL;
-    // char *status = NULL;
 
     while (should_loop == TRUE)
     {
-
         // step 1: identify and add new processes to the queue
         while (submitted_process < num_process && processes[submitted_process]->arrival_time <= simulation_time)
         {
             change_status(processes[submitted_process], READY);
-            printf("process-status: %d\n", processes[submitted_process]->status);
             enqueue(queue, processes[submitted_process]);
             submitted_process++;
         }
@@ -54,9 +50,6 @@ void roundRobin(process_t **processes, queue_t *queue, int num_process, int quan
                 if (!isEmpty(queue))
                 {
                     change_status(current_process, READY);
-
-                    // NEEDS WORKING HERE. THE CURRENT PROCESS IS BEING DEQUEUED AGAIN.
-
                     enqueue(queue, current_process);
                     current_process = NULL;
                 } // else loop keeps running, status is not changed

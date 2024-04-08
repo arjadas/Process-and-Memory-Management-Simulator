@@ -18,10 +18,8 @@ int main(int argc, char const *argv[])
     process_t **processes = read_processes(inputs, &num_processes);
     print_processes(processes, num_processes);
 
-    printf("number of process- %d\n", num_processes);
-
     queue_t *queue = createQueue();
-    roundRobin(processes, queue, num_processes, 1);
+    roundRobin(processes, queue, num_processes, inputs->quantum);
     free(queue);
 
     return 0;

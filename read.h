@@ -14,8 +14,8 @@ typedef struct
     int quantum;
 } read_t;
 
-
-enum Input {
+enum Input
+{
     ARRIVAL,
     NAME,
     SERVICE_TIME,
@@ -29,5 +29,6 @@ process_t **read_processes(read_t *input, int *num_processes);
 void reset_buffer(char *buffer, int *length);
 void parse_value(process_t *process, char *buffer, enum Input column);
 void add_buffer(char *buffer, int i, char letter);
+process_t **resize_processes(process_t **processes, int *size);
 
 #endif

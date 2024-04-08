@@ -14,6 +14,7 @@ process_t **read_processes(read_t *input, int *num_processes)
 
     process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
     process_t *process = create_process();
+    int curr_array_size = 100;
 
     FILE *fpt = fopen(input->filename, "r");
     assert(fpt);
@@ -35,6 +36,10 @@ process_t **read_processes(read_t *input, int *num_processes)
             process = create_process();
             reset_buffer(buffer, &i);
             column = ARRIVAL;
+            if (*num_processes == curr_array_size)
+            {
+                processes = resize_processes(processes, &curr_array_size);
+            }
         }
         else if (letter == ' ') // length of buffer
         {
@@ -51,6 +56,18 @@ process_t **read_processes(read_t *input, int *num_processes)
     }
     free(buffer);
     return processes;
+}
+
+process_t **resize_processes(process_t **processes, int *size)
+{
+    int new_size = 2 * (*size);
+    process_t **new_array = (process_t **)malloc(sizeof(process_t *) * (new_size));
+    for (size_t i = 0; i < new_size; i++)
+    {
+        new_array[i] = processes[i];
+    }
+    *size = new_size;
+    return new_array;
 }
 
 void add_buffer(char *buffer, int i, char letter)
