@@ -101,7 +101,10 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         // remaining time is equal to service time initially
         process->remaining_time = service_time;
 
-        // setting status to not_set
+        // setting status and completion_time to not_set
+        process->completion_time = NOT_SET;
+        process->turnaround_time = NOT_SET;
+        process->time_overhead = NOT_SET;
         process->status = NOT_SET;
 
         break;

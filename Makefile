@@ -1,5 +1,5 @@
 allocate: main.o read.o process.o roundrobin.o queue.o
-	gcc -Wall -o allocate main.o read.o process.o roundrobin.o queue.o
+	gcc -Wall -o allocate main.o read.o process.o roundrobin.o queue.o -lm
 
 main.o: main.c read.h process.h queue.h roundrobin.h
 	gcc -Wall -o main.o main.c -c

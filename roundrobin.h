@@ -8,6 +8,10 @@
 #define TRUE 1
 #define FALSE 2
 
-void roundRobin(process_t **processes, queue_t *queue, int num_process, int quantum);
+void round_robin(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan);
+void print_statistics(process_t **processes, int num_process, int makespan);
+int get_average_turnaround(process_t **processes, int num_process);
+double get_max_time_overhead(process_t **processes, int num_process);
+double get_average_time_overhead(process_t **processes, int num_process);
 
 #endif
