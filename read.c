@@ -4,6 +4,7 @@
 #include <string.h>
 #include "read.h"
 #include "process.h"
+#include "memory.h"
 
 process_t **read_processes(read_t *input, int *num_processes)
 {
@@ -106,7 +107,6 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         process->turnaround_time = NOT_SET;
         process->time_overhead = NOT_SET;
         process->status = NOT_SET;
-
         break;
     case MEMORY:
         int memory = atoi(buffer);

@@ -1,5 +1,6 @@
 #ifndef PROCESS_H
 #define PROCESS_H
+#include "memory.h"
 #define FINISHED 0
 #define READY 1
 #define RUNNING 2
@@ -17,6 +18,7 @@ typedef struct
     double time_overhead; // data type - double
     int memory_KB;
     int status;
+    memory_t allocation;
 } process_t;
 
 process_t *create_process();
