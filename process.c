@@ -46,14 +46,19 @@ int change_status(process_t *process, int new_status)
 
     if (status == FINISHED && new_status != FINISHED)
         return -1;
+
     if (status == READY && new_status == FINISHED)
         return -1;
+
     if (status == READY && new_status == RUNNING)
         process->status = new_status;
+
     if (status == RUNNING && new_status == READY)
         process->status = new_status;
+
     if (status == RUNNING && new_status == FINISHED)
         process->status = new_status;
+        
     return new_status;
 }
 

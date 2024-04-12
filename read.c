@@ -31,7 +31,6 @@ process_t **read_processes(read_t *input, int *num_processes)
         if ((letter == '\n') && (column == MEMORY))
         {
             parse_value(process, buffer, column);
-            process->allocation = (memory_t *)malloc(sizeof(memory_t));
             processes[*num_processes] = process;
             (*num_processes)++;
             process = create_process();
@@ -107,6 +106,10 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         process->turnaround_time = NOT_SET;
         process->time_overhead = NOT_SET;
         process->status = NOT_SET;
+
+        // memory allocation
+        process->allocation = (memory_t *)malloc(sizeof(memory_t));
+        process->allocation->quantity = 0;
         break;
     case MEMORY:
         int memory = atoi(buffer);

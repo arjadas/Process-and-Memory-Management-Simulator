@@ -13,6 +13,7 @@ queue_t *createQueue()
 
     queue->head = NULL;
     queue->tail = NULL;
+    queue->length = 0;
 
     return queue;
 }
@@ -47,6 +48,7 @@ void enqueue(queue_t *queue, process_t *process)
         queue->tail->next = newNode;
         queue->tail = newNode;
     }
+    queue->length += 1;
 }
 
 process_t *dequeue(queue_t *queue)
@@ -73,7 +75,7 @@ process_t *dequeue(queue_t *queue)
         // there was only one element in the queue, so the tail needs to point to null too
         queue->tail = NULL;
     }
-
+    queue->length -= 1;
     item_node->next = NULL;
 
     process_t *data = item_node->data;

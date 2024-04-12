@@ -15,6 +15,7 @@ typedef struct
 {
     node_t *head;
     node_t *tail;
+    int length;
 } queue_t;
 
 // prototypes

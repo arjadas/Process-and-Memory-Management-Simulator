@@ -20,20 +20,22 @@ int main(int argc, char const *argv[])
     read_t *inputs = process_arguments(argc, argv);
     process_t **processes = read_processes(inputs, &num_processes);
     print_processes(processes, num_processes);
-    queue_t *queue;
+    queue_t *queue = createQueue();
 
     if (inputs->memory == INFINITE) 
     {
         // task 1
-        queue_t *queue = createQueue();
         round_robin(processes, queue, num_processes, inputs->quantum, &makespan);
         print_statistics(processes, num_processes, makespan);
     }
     else if (inputs->memory == FIRST_FIT)
     {
         // task 2 code
-        printf("main line 35\n");
-        queue_t *queue = initial_memory_allocation(processes, &num_processes);
+        bitmap_t bitmap = make_bitmap();
+        initial_memory_allocation(processes, &num_processes, bitmap);
+        printf("made it to line 36 main\n");
+        printf("quantum = %d, queue = %p, bitmap = %p, num_processes = %p, processes = %p\n", inputs->quantum, queue, bitmap, &num_processes, processes);
+        scheduler(inputs->quantum, queue, bitmap, &num_processes, processes);
     }
     else if (inputs->memory == PAGED)
     {
