@@ -6,6 +6,7 @@
 #include "process.h"
 #include "queue.h"
 #include "roundrobin.h"
+#include "task2.h"
 
 int main(int argc, char const *argv[])
 {
@@ -19,14 +20,32 @@ int main(int argc, char const *argv[])
     read_t *inputs = process_arguments(argc, argv);
     process_t **processes = read_processes(inputs, &num_processes);
     print_processes(processes, num_processes);
+    queue_t *queue;
 
-    queue_t *queue = createQueue();
+    if (inputs->memory == INFINITE) 
+    {
+        // task 1
+        queue_t *queue = createQueue();
+        round_robin(processes, queue, num_processes, inputs->quantum, &makespan);
+        print_statistics(processes, num_processes, makespan);
+    }
+    else if (inputs->memory == FIRST_FIT)
+    {
+        // task 2 code
+        printf("main line 35\n");
+        queue_t *queue = initial_memory_allocation(processes, &num_processes);
+    }
+    else if (inputs->memory == PAGED)
+    {
+        /* code */
+    }
+    else if (inputs->memory == VIRTUAL)
+    {
+        /* code */
+    }
+    
 
-    // task 1
-    round_robin(processes, queue, num_processes, inputs->quantum, &makespan);
-    print_statistics(processes, num_processes, makespan);
-
-    free(queue);
+    //free(queue);
 
     return 0;
 }

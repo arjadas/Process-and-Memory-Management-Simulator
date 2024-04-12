@@ -18,8 +18,6 @@ int main(int argc, char const *argv[])
     read_t *inputs = process_arguments(argc, argv);
     process_t **processes = read_processes(inputs, &num_processes);
     queue_t *queue = initial_memory_allocation(processes, &num_processes);
-
-
-
+    
     return 0;
 }

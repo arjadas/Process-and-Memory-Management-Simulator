@@ -18,7 +18,7 @@ typedef struct
     double time_overhead; // data type - double
     int memory_KB;
     int status;
-    memory_t allocation;
+    memory_t *allocation;
 } process_t;
 
 process_t *create_process();

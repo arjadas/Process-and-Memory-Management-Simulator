@@ -7,6 +7,7 @@
 #include "memory.h"
 #include "queue.h"
 #include "bitmap.h"
+#include "task2.h"
 
 queue_t *initial_memory_allocation(process_t **processes, int *num_processes)
 {
@@ -19,6 +20,7 @@ queue_t *initial_memory_allocation(process_t **processes, int *num_processes)
     for (int i = 0; i < *num_processes; i++)
     {
         // enqueue node
+        printf("inside the for loop line 23 i = %d\n", i);
         enqueue(queue, processes[i]);
 
         // allocate memory (if possible)
@@ -26,13 +28,15 @@ queue_t *initial_memory_allocation(process_t **processes, int *num_processes)
     }
     for (int i = 0; i < *num_processes; i++)
     {
+        printf("for loop line 31 i = %d\n", i);
         print_process2(processes[i]);
     } 
+    printf("here\n");
     return queue;
 }
 
 void print_process2(process_t *process)
 {
     printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d to %d\n", 
-        process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation.start, process->allocation.end);
+        process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end);
 }

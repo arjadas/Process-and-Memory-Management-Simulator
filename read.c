@@ -31,7 +31,7 @@ process_t **read_processes(read_t *input, int *num_processes)
         if ((letter == '\n') && (column == MEMORY))
         {
             parse_value(process, buffer, column);
-
+            process->allocation = (memory_t *)malloc(sizeof(memory_t));
             processes[*num_processes] = process;
             (*num_processes)++;
             process = create_process();

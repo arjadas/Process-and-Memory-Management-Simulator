@@ -4,11 +4,11 @@
 #include <string.h>
 #include "memory.h"
 #include "process.h"
-// we're cheating by not using atual bits
+// we're cheating by not using actual bits
 
 int *make_bitmap()
 {
-    int bitmap[2048];
+    int *bitmap = (int *)malloc(sizeof(int)*2048);
     for (int i = 0; i < 2048; i++)
     {
         bitmap[i] = 0;
@@ -26,6 +26,7 @@ int allocate_memory(int *bitmap, process_t *process)
     // search for block
     int start = -1, count = 0;
     int num_bytes = process->memory_KB;
+    
 
     for (int i = 0; i < 2048; i++)
     {
@@ -37,10 +38,10 @@ int allocate_memory(int *bitmap, process_t *process)
         else if ((bitmap[i]) == 0 && (count > 0))
         {
             count += 1;
-            if ((bitmap == 0) && (count == num_bytes)) // found a bit enough block
+            if ((bitmap[i] == 0) && (count == num_bytes)) // found a bit enough block
             {
-                process->allocation.start = start;
-                process->allocation.end = i;
+                process->allocation->start = start;
+                process->allocation->end = i;
                 
                 // allocate the memory
                 for (int j = start; j <= i; j++)
@@ -50,6 +51,7 @@ int allocate_memory(int *bitmap, process_t *process)
                 
                 return 1;
             }
+
         }
         else if (bitmap[i] == 1)
         {
