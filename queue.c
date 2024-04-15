@@ -109,3 +109,22 @@ void empty_queue(queue_t *queue)
     // freeing the queue
     free(queue);
 }
+
+int get_queue_length(queue_t *queue)
+{
+    /*
+        function to return length of the queue
+    */
+
+    /*
+     int len = 0;
+
+     if (is_empty(queue)) {
+         return len;
+     } else {
+         return queue->length;
+     }
+     */
+
+    return queue->length;
+}

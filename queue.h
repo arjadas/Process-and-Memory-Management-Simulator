@@ -25,5 +25,6 @@ int is_empty(queue_t *queue);
 void enqueue(queue_t *queue, process_t *process);
 process_t *dequeue(queue_t *queue);
 void empty_queue(queue_t *queue);
+int get_queue_length(queue_t *queue);
 
 #endif
