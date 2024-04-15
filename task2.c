@@ -43,6 +43,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
     int simulation_time = 0;
     int submitted_process = 0;
     int remaining_process = num_process;
+    int ready_process_remaining = 0;
     int should_loop = TRUE;
     process_t *current_process = NULL;
 
@@ -67,7 +68,8 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
                 change_status(current_process, FINISHED);
 
                 remaining_process--;
-                printf("%d, %s, process-name=%s, proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, remaining_process);
+                ready_process_remaining = get_queue_length(queue);
+                printf("%d, %s, process-name=%s, proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
 
                 current_process->completion_time = simulation_time; //  time of completion for the process
                 current_process->turnaround_time = simulation_time - current_process->arrival_time;
