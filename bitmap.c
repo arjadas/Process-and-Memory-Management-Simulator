@@ -24,7 +24,7 @@ int allocate_memory(bitmap_t bitmap, process_t *process)
         in order to allocate memory we need to iterate through 
         bits to find a chunk of free memory of num_bytes
         then need to return the allocation
-        an implementation the FIRST-FIT algorithm
+        an implementation of the FIRST-FIT algorithm
     */
     // search for block
     int start = -1, count = 0;
