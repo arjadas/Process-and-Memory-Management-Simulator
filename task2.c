@@ -25,22 +25,22 @@ void initial_memory_allocation(process_t **processes, int *num_processes, bitmap
     // for (int i = 0; i < *num_processes; i++)
     // {
     //     print_process2(processes[i]);
-    // } 
+    // }
 }
 
 void print_process2(process_t *process)
 {
-    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d to %d amount = %d\n", 
-        process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end, process->allocation->quantity);
+    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d to %d amount = %d\n",
+           process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end, process->allocation->quantity);
 }
 
-void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t bitmap) 
+void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t bitmap)
 {
     /*
-        scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation, 
+        scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation,
             if not then they are sent to the back of the queue. uses roundrobin algorithm
     */
-   int simulation_time = 0;
+    int simulation_time = 0;
     int submitted_process = 0;
     int remaining_process = num_process;
     int should_loop = TRUE;
@@ -77,7 +77,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
                 // free_process(current_process);
                 current_process = NULL;
 
-                if (remaining_process == 0 && isEmpty(queue))
+                if (remaining_process == 0 && is_empty(queue))
                 {
                     should_loop = FALSE; // if we use a break, we can skip the should_loop variable
                     break;
@@ -87,7 +87,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
             {
                 // requires more time
 
-                if (!isEmpty(queue))
+                if (!is_empty(queue))
                 {
                     change_status(current_process, READY);
                     enqueue(queue, current_process);
@@ -98,16 +98,16 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
 
         // step 3: determine the process that runs in this cycle
 
-        if (current_process == NULL && !isEmpty(queue))
+        if (current_process == NULL && !is_empty(queue))
         {
             current_process = get_next_process(queue, bitmap);
             if (current_process != NULL)
             {
                 change_status(current_process, RUNNING);
                 // if (previous_process != current_process)
-                printf("%d, %s, process-name=%s, remaining-time=%d, mem-usage=%d, allocated-at=%d\n", 
-                    simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time, 
-                    (current_process->memory_KB)/2048, current_process->allocation->start);
+                printf("%d, %s, process-name=%s, remaining-time=%d, mem-usage=%d, allocated-at=%d\n",
+                       simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
+                       (current_process->memory_KB) / 2048, current_process->allocation->start);
             }
         }
 
@@ -126,9 +126,9 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
 process_t *get_next_process(queue_t *queue, bitmap_t bitmap)
 {
     /*
-        get next process that has been allocated memory, if no memory allocation and 
+        get next process that has been allocated memory, if no memory allocation and
             memory allocation not possible then return NULL
-    
+
     */
     process_t *process = NULL, *temp = NULL;
     int i = 0;

@@ -5,9 +5,10 @@
 // queue data structure
 typedef struct node node_t;
 
-struct node {
-	process_t *data;
-	node_t *next;
+struct node
+{
+    process_t *data;
+    node_t *next;
 };
 
 // queue data structure
@@ -19,10 +20,10 @@ typedef struct
 } queue_t;
 
 // prototypes
-queue_t *createQueue();
-int isEmpty(queue_t *queue);
+queue_t *create_queue();
+int is_empty(queue_t *queue);
 void enqueue(queue_t *queue, process_t *process);
 process_t *dequeue(queue_t *queue);
-void emptyQueue(queue_t *queue);
+void empty_queue(queue_t *queue);
 
 #endif

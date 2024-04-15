@@ -1,14 +1,17 @@
-allocate: main.o read.o process.o roundrobin.o queue.o task2.o bitmap.o
-	gcc -Wall -o allocate main.o read.o process.o roundrobin.o queue.o task2.o bitmap.o -lm
+allocate: main.o read.o process.o task1.o queue.o task2.o bitmap.o helperfunctions.o
+	gcc -Wall -o allocate main.o read.o process.o task1.o queue.o task2.o bitmap.o helperfunctions.o -lm
 
-main.o: main.c read.h process.h queue.h roundrobin.h task2.h
+main.o: main.c read.h process.h queue.h task1.h task2.h helperfunctions.h
 	gcc -Wall -o main.o main.c -c
 
 task2.o: task2.c read.h process.h queue.h memory.h bitmap.h
 	gcc -Wall -o task2.o task2.c -c
 
-roundrobin.o: roundrobin.c roundrobin.h process.h queue.h
-	gcc -Wall -o roundrobin.o roundrobin.c -c
+task1.o: task1.c task1.h process.h queue.h
+	gcc -Wall -o task1.o task1.c -c
+
+helperfunctions.o: helperfunctions.c helperfunctions.h process.h
+	gcc -Wall -o helperfunctions.o helperfunctions.c -c
 
 queue.o: queue.c queue.h process.h 
 	gcc -Wall -o queue.o queue.c -c
