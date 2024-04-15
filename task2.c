@@ -18,96 +18,109 @@ void initial_memory_allocation(process_t **processes, int *num_processes, bitmap
     for (int i = 0; i < *num_processes; i++)
     {
         // enqueue node
-        printf("inside the for loop line 23 i = %d\n", i);
 
         // allocate memory (if possible)
         allocate_memory(bitmap, processes[i]);
     }
-    for (int i = 0; i < *num_processes; i++)
-    {
-        printf("for loop line 31 i = %d\n", i);
-        print_process2(processes[i]);
-    } 
-    printf("here\n");
+    // for (int i = 0; i < *num_processes; i++)
+    // {
+    //     print_process2(processes[i]);
+    // } 
 }
 
 void print_process2(process_t *process)
 {
-    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d to %d\n", 
-        process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end);
+    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d to %d amount = %d\n", 
+        process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end, process->allocation->quantity);
 }
 
-void scheduler(int quantum, queue_t *queue, bitmap_t bitmap, int *num_processes, process_t **processes) 
+void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t bitmap) 
 {
     /*
         scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation, 
             if not then they are sent to the back of the queue. uses roundrobin algorithm
     */
-   printf("made it to line 46\n");
-    int submitted_processes = 0, completed_processes = 0;
-    int remaining_process = *num_processes;
-    int simulation_time = 0, should_loop = 1;
-    process_t *running_process = NULL, *temp = NULL;
-    
-    // get first item to put on CPU
-    printf("made it to line 52\n");
-    running_process = processes[submitted_processes];
-    printf("made it to line 54\n");
-    // begin scheduler
-    while (should_loop && (simulation_time += quantum) && (completed_processes < *num_processes)) 
-    {
-        // step 1: check for new processes
-        print_process2(running_process);
-        running_process->remaining_time -= quantum;
-        printf("line 62, submitted_processes = %d\n", submitted_processes);
-        temp = processes[submitted_processes];
-        submitted_processes++;
-        printf("made it to line 61, submitted_processes = %d, num_processes = %d\n", submitted_processes, *num_processes);
-        while ((temp != NULL) && (temp->arrival_time <= simulation_time) && (submitted_processes < *num_processes))
-        {
-            // add to the queue
-            printf("entered loop\n");
-            enqueue(queue, temp);
-            temp = processes[submitted_processes];
-            submitted_processes++;
-        }
-        temp = NULL;
-        printf("made it to line 73, submitted_processes = %d\n", submitted_processes);
-        // step 2: find next process to allocate to the CPU
-        if (running_process)
-        {   
-            if (!isEmpty(queue) && (temp = get_next_process(queue, bitmap)))
-            {
-                // need to take process off of the CPU
-                enqueue(queue, running_process);
-                change_status(running_process, READY);
+   int simulation_time = 0;
+    int submitted_process = 0;
+    int remaining_process = num_process;
+    int should_loop = TRUE;
+    process_t *current_process = NULL;
 
-                // get process to give CPU time
-                running_process = temp;
-                change_status(running_process, RUNNING);
-                temp = NULL;
+    while (should_loop == TRUE)
+    {
+        // step 1: identify and add new processes to the queue
+        while (submitted_process < num_process && processes[submitted_process]->arrival_time <= simulation_time)
+        {
+            change_status(processes[submitted_process], READY);
+            enqueue(queue, processes[submitted_process]);
+            submitted_process++;
+        }
+
+        // a cycle of looping
+
+        // step 2: check if current process has completed its execution
+
+        if (current_process != NULL)
+        {
+            if (current_process->remaining_time <= 0)
+            {
+                change_status(current_process, FINISHED);
+
+                remaining_process--;
+                printf("%d, %s, process-name=%s, proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, remaining_process);
+
+                current_process->completion_time = simulation_time; //  time of completion for the process
+                current_process->turnaround_time = simulation_time - current_process->arrival_time;
+                current_process->time_overhead = (current_process->turnaround_time * 1.0) / current_process->service_time; // multiply with 1.0 to convert to float/double
+                deallocate_bitmap(bitmap, current_process->allocation->start, current_process->allocation->end);
+                // no need to enqueue as process is finished
+                // free_process(current_process);
+                current_process = NULL;
+
+                if (remaining_process == 0 && isEmpty(queue))
+                {
+                    should_loop = FALSE; // if we use a break, we can skip the should_loop variable
+                    break;
+                } // else loop continues
             }
             else
             {
-                // if queue is empty then check if process needs to keep running
-                if (running_process->remaining_time <= 0)
+                // requires more time
+
+                if (!isEmpty(queue))
                 {
-                    change_status(running_process, FINISHED);
-                    printf("%d, %s, process-name = %s, proc-remaining = %d\n", simulation_time, get_status_string(running_process), running_process->name, remaining_process);
-
-                    running_process->completion_time = simulation_time; //  time of completion for the process
-                    running_process->turnaround_time = simulation_time - running_process->arrival_time;
-                    running_process->time_overhead = (running_process->turnaround_time * 1.0) / running_process->service_time; // multiply with 1.0 to convert to float/double
-                    running_process = NULL;
-                    completed_processes++;
-
-                    // loop is now done
-                    should_loop = 0;
-                }
-                // running process just gets the CPU for another loop
+                    change_status(current_process, READY);
+                    enqueue(queue, current_process);
+                    current_process = NULL;
+                } // else loop keeps running, status is not changed
             }
         }
-   }
+
+        // step 3: determine the process that runs in this cycle
+
+        if (current_process == NULL && !isEmpty(queue))
+        {
+            current_process = get_next_process(queue, bitmap);
+            if (current_process != NULL)
+            {
+                change_status(current_process, RUNNING);
+                // if (previous_process != current_process)
+                printf("%d, %s, process-name=%s, remaining-time=%d, mem-usage=%d, allocated-at=%d\n", 
+                    simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time, 
+                    (current_process->memory_KB)/2048, current_process->allocation->start);
+            }
+        }
+
+        if (current_process != NULL && current_process->remaining_time > 0)
+        {
+            (current_process->remaining_time -= quantum);
+        }
+
+        // update simulation time
+        simulation_time += quantum;
+    }
+
+    *makespan = simulation_time;
 }
 
 process_t *get_next_process(queue_t *queue, bitmap_t bitmap)
@@ -123,17 +136,23 @@ process_t *get_next_process(queue_t *queue, bitmap_t bitmap)
     while (i < queue->length)
     {
         temp = dequeue(queue);
-        if (temp->memory_KB)
+        if (temp->allocation->quantity == temp->memory_KB)
         {
             process = temp;
+            break;
         }
         else
         {
             allocate = allocate_memory(bitmap, temp);
-            if (allocate)
+            if (allocate == TRUE)
             {
                 // allocation was successful
                 process = temp;
+                break;
+            }
+            else
+            {
+                enqueue(queue, temp);
             }
         }
     }

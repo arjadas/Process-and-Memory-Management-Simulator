@@ -52,7 +52,7 @@ int allocate_memory(bitmap_t bitmap, process_t *process)
                 {
                     bitmap[j] = 1;
                 }
-                
+                // allocation was successful
                 return 1;
             }
 

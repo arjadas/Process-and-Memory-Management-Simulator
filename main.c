@@ -19,7 +19,6 @@ int main(int argc, char const *argv[])
 
     read_t *inputs = process_arguments(argc, argv);
     process_t **processes = read_processes(inputs, &num_processes);
-    print_processes(processes, num_processes);
     queue_t *queue = createQueue();
 
     if (inputs->memory == INFINITE) 
@@ -33,9 +32,8 @@ int main(int argc, char const *argv[])
         // task 2 code
         bitmap_t bitmap = make_bitmap();
         initial_memory_allocation(processes, &num_processes, bitmap);
-        printf("made it to line 36 main\n");
-        printf("quantum = %d, queue = %p, bitmap = %p, num_processes = %p, processes = %p\n", inputs->quantum, queue, bitmap, &num_processes, processes);
-        scheduler(inputs->quantum, queue, bitmap, &num_processes, processes);
+        scheduler(processes, queue, num_processes, inputs->quantum, &makespan, bitmap);
+        print_statistics(processes, num_processes, makespan);
     }
     else if (inputs->memory == PAGED)
     {
