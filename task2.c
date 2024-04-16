@@ -22,12 +22,7 @@ void initial_memory_allocation(process_t **processes, int *num_processes, bitmap
         // allocate memory (if possible)
         allocate_memory(bitmap, processes[i]);
     }
-    // for (int i = 0; i < *num_processes; i++)
-    // {
-    //     print_process2(processes[i]);
-    // }
-    } 
-}
+} 
 
 void print_process2(process_t *process)
 {
