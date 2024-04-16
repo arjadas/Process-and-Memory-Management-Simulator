@@ -11,9 +11,9 @@ typedef struct
 {
     char *name;
     int arrival_time;
-    int remaining_time;
+    unsigned long int remaining_time;
     unsigned long int service_time; // check data type
-    int completion_time;
+    unsigned long int completion_time;
     int turnaround_time;
     double time_overhead; // data type - double
     int memory_KB;

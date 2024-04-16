@@ -34,13 +34,13 @@ void print_process2(process_t *process)
            process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end, process->allocation->quantity);
 }
 
-void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t bitmap)
+void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, unsigned long int *makespan, bitmap_t bitmap)
 {
     /*
         scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation,
             if not then they are sent to the back of the queue. uses roundrobin algorithm
     */
-    int simulation_time = 0;
+    unsigned long int simulation_time = 0;
     int submitted_process = 0;
     int remaining_process = num_process;
     int ready_process_remaining = 0;
@@ -69,7 +69,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
 
                 remaining_process--;
                 ready_process_remaining = get_queue_length(queue);
-                printf("%d, %s, process-name=%s, proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
+                printf("%lu, %s, process-name=%s, proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
 
                 current_process->completion_time = simulation_time; //  time of completion for the process
                 current_process->turnaround_time = simulation_time - current_process->arrival_time;
@@ -107,7 +107,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
             {
                 change_status(current_process, RUNNING);
                 // if (previous_process != current_process)
-                printf("%d, %s, process-name=%s, remaining-time=%d, mem-usage=%d, allocated-at=%d\n",
+                printf("%lu, %s, process-name=%s, remaining-time=%lu, mem-usage=%d, allocated-at=%d\n",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        (current_process->memory_KB) / 2048, current_process->allocation->start);
             }

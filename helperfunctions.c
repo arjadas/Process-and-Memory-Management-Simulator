@@ -3,19 +3,19 @@
 #include <math.h>
 #include "helperfunctions.h"
 
-void print_statistics(process_t **processes, int num_process, int makespan)
+void print_statistics(process_t **processes, int num_process, unsigned long int makespan)
 {
     printf("Turnaround time %d\n", get_average_turnaround(processes, num_process));
 
     printf("Time overhead %.2lf %.2lf\n", get_max_time_overhead(processes, num_process), get_average_time_overhead(processes, num_process));
 
-    printf("Makespan %d\n", makespan);
+    printf("Makespan %lu\n", makespan);
 }
 
 int get_average_turnaround(process_t **processes, int num_process)
 {
 
-    int total = 0;
+    unsigned long int total = 0;
 
     for (int i = 0; i < num_process; i++)
     {

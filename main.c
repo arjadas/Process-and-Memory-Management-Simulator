@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
     */
 
     int num_processes = 0;
-    int makespan = 0;
+    unsigned long int makespan = 0;
 
     read_t *inputs = process_arguments(argc, argv);
     process_t **processes = read_processes(inputs, &num_processes);
