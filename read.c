@@ -57,6 +57,7 @@ process_t **read_processes(read_t *input, int *num_processes)
     }
     free(buffer);
     free(process);
+    fclose(fpt);
     return processes;
 }
 
