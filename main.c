@@ -51,7 +51,7 @@ int main(int argc, char const *argv[])
 
     free(queue);
     free_processes(processes, num_processes);
-    free(inputs);
+    free_inputs(inputs);
 
     return 0;
 }

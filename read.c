@@ -14,6 +14,7 @@ process_t **read_processes(read_t *input, int *num_processes)
     */
 
     process_t **processes = (process_t **)malloc(sizeof(process_t *) * 100);
+    assert(processes != NULL);
     process_t *process = create_process();
     int curr_array_size = 100;
 
