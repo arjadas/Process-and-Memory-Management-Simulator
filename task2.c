@@ -34,7 +34,7 @@ void print_process2(process_t *process)
            process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end, process->allocation->quantity);
 }
 
-void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, unsigned long int *makespan, bitmap_t bitmap)
+void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t bitmap)
 {
     /*
         scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation,
