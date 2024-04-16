@@ -7,7 +7,7 @@
 #include "bitmap.h"
 
 #define TRUE 1
-#define FALSE 2
+#define FALSE 0
 #define T2_SIZE 2048
 
 void initial_memory_allocation(process_t **processes, int *num_processes, bitmap_t *bitmap);

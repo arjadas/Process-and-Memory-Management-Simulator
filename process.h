@@ -1,6 +1,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 #include "memory.h"
+
 #define FINISHED 0
 #define READY 1
 #define RUNNING 2
@@ -10,6 +11,7 @@
 typedef struct
 {
     char *name;
+    int id;
     int arrival_time;
     int remaining_time;
     unsigned long int service_time; // check data type
@@ -19,6 +21,7 @@ typedef struct
     int memory_KB;
     int status;
     memory_t *allocation;
+    int *pages;
 } process_t;
 
 process_t *create_process();

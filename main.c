@@ -9,6 +9,7 @@
 #include "task2.h"
 #include "task3.h"
 #include "helperfunctions.h"
+#include "page.h"
 
 int main(int argc, char const *argv[])
 {

@@ -32,6 +32,8 @@ process_t **read_processes(read_t *input, int *num_processes)
         if ((letter == '\n') && (column == MEMORY))
         {
             parse_value(process, buffer, column);
+            assign_memory(process, input->memory);
+            process->id = *num_processes;
             processes[*num_processes] = process;
             (*num_processes)++;
             process = create_process();
@@ -109,10 +111,6 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         process->turnaround_time = NOT_SET;
         process->time_overhead = NOT_SET;
         process->status = NOT_SET;
-
-        // memory allocation
-        process->allocation = (memory_t *)malloc(sizeof(memory_t));
-        process->allocation->quantity = 0;
         break;
     case MEMORY:
         int memory = atoi(buffer);
@@ -120,6 +118,25 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         break;
     default:
         break;
+    }
+}
+
+void assign_memory(process_t *process, int management)
+{
+    /*
+        allocates memory depending on the memory management strategy
+    */
+
+    if (management == FIRST_FIT)
+    {
+        process->allocation = (memory_t *)malloc(sizeof(memory_t));
+        process->allocation->quantity = 0;
+        process->pages = NULL;
+    }
+    else
+    {
+        process->allocation = NULL;
+        process->pages = NULL;
     }
 }
 

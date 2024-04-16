@@ -2,6 +2,7 @@
 #define READ_H
 #include <stdio.h>
 #include "process.h"
+
 #define INFINITE 0
 #define FIRST_FIT 1
 #define PAGED 2
@@ -31,5 +32,6 @@ void parse_value(process_t *process, char *buffer, enum Input column);
 void add_buffer(char *buffer, int i, char letter);
 process_t **resize_processes(process_t **processes, int *size);
 void free_inputs(read_t *inputs);
+void assign_memory(process_t *process, int management);
 
 #endif

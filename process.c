@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "read.h"
+#include "page.h"
 
 process_t *create_process()
 {
