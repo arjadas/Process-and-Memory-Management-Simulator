@@ -36,6 +36,7 @@ int main(int argc, char const *argv[])
         initial_memory_allocation(processes, &num_processes, bitmap);
         scheduler(processes, queue, num_processes, inputs->quantum, &makespan, bitmap);
         print_statistics(processes, num_processes, makespan);
+        destroy_map(bitmap);
     }
     else if (inputs->memory == PAGED)
     {
@@ -48,7 +49,8 @@ int main(int argc, char const *argv[])
         /* code */
     }
 
-    // free(queue);
+    free(queue);
+    free_processes(processes, num_processes);
 
     return 0;
 }

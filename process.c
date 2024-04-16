@@ -97,6 +97,19 @@ void free_process(process_t *process)
     {
         if (process->name != NULL)
             free(process->name);
+        if (process->allocation != NULL)
+        {
+            free(process->allocation);
+        }
         free(process);
     }
+}
+
+void free_processes(process_t **processes, int num_processes)
+{
+    for (int i = 0; i < num_processes; i++)
+    {
+        free_process(processes[i]);
+    }
+    free(processes);
 }

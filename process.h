@@ -28,5 +28,6 @@ void free_process(process_t *process);
 void print_process(process_t *process);
 void print_processes(process_t **processes, int num_processes);
 char *get_status_string(process_t *process);
+void free_processes(process_t **processes, int num_processes);
 
 #endif
