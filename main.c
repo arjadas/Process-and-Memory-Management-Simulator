@@ -7,6 +7,7 @@
 #include "queue.h"
 #include "task1.h"
 #include "task2.h"
+#include "task3.h"
 #include "helperfunctions.h"
 
 int main(int argc, char const *argv[])
