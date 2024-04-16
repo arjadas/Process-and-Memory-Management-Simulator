@@ -3,16 +3,33 @@
 #include "process.h"
 
 #define PAGE_SIZE 4
+#define TRUE 1
 
-typedef struct {
-    int *allocations;
-    int vacancies;  
-    int size;
+typedef struct page_table
+{
+    int *allocation;
+    int allocated;
+    int amount; 
+    int current_amount;
 } page_table_t;
 
-page_table_t *make_page_table(int size);
-int allocate_pages(page_table_t *page_table, process_t *process);
-void deallocate_page_table(page_table_t *page_table, int id);
-void destroy_table(page_table_t *page_table);
+typedef struct page
+{
+    int id;
+    unsigned long int time;
+} page_t;
+
+typedef struct 
+{
+    page_t **allocations;
+    int vacancies;  
+    int size;
+} allocation_t;
+
+allocation_t *make_allocation(int size);
+int allocate_pages(allocation_t *allocation, int memory_KB, page_table_t *page_table, int id, int time);
+void deallocate_allocation(allocation_t *allocation, int id);
+void destroy_table(allocation_t *allocation);
+void print_table(page_table_t *page_table);
 
 #endif

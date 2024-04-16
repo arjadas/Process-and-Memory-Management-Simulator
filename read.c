@@ -5,6 +5,7 @@
 #include "read.h"
 #include "process.h"
 #include "memory.h"
+#include "page.h"
 
 process_t **read_processes(read_t *input, int *num_processes)
 {
@@ -111,6 +112,7 @@ void parse_value(process_t *process, char *buffer, enum Input column)
         process->turnaround_time = NOT_SET;
         process->time_overhead = NOT_SET;
         process->status = NOT_SET;
+        process->last_executed = NOT_SET;
         break;
     case MEMORY:
         int memory = atoi(buffer);
@@ -131,12 +133,13 @@ void assign_memory(process_t *process, int management)
     {
         process->allocation = (memory_t *)malloc(sizeof(memory_t));
         process->allocation->quantity = 0;
-        process->pages = NULL;
+        process->page_table = NULL;
     }
     else
     {
         process->allocation = NULL;
-        process->pages = NULL;
+        process->page_table = (page_table_t *)malloc(sizeof(page_table_t));
+        process->page_table->amount = (process->memory_KB / 4) + !(process->memory_KB % 4 == 0);
     }
 }
 

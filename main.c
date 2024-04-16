@@ -42,7 +42,11 @@ int main(int argc, char const *argv[])
     else if (inputs->memory == PAGED)
     {
         // task 3
-        // bitmap_t *bitmap = make_bitmap(T3_SIZE);
+        allocation_t *allocation = make_allocation(T3_SIZE);
+        initial_page_allocation(processes, allocation);
+        paged_scheduler(processes, queue, num_processes, inputs->quantum, &makespan, allocation);
+        print_statistics(processes, num_processes, makespan);
+        destroy_table(allocation);
 
     }
     else if (inputs->memory == VIRTUAL)

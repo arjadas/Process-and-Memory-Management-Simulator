@@ -5,48 +5,54 @@
 #include "process.h"
 #include "page.h"
 
-page_table_t *make_page_table(int size)
+allocation_t *make_allocation(int size)
 {
-    page_table_t *page_table = (page_table_t *)malloc(sizeof(page_table_t));
-    page_table->allocations = (int *)malloc(sizeof(int)*size);
-    page_table->size = size;
+    allocation_t *allocation = (allocation_t *)malloc(sizeof(allocation_t));
+    allocation->allocations = (page_t **)malloc(sizeof(page_t *) * size);
+    allocation->size = size;
     for (int i = 0; i < size; i++)
     {
-        (page_table->allocations)[i] = 0;
+        (allocation->allocations)[i] = (page_t *)malloc(sizeof(page_t));
+        (allocation->allocations)[i]->id = -1;
+        (allocation->allocations)[i]->time = -1;
     }
-    page_table->vacancies = size;
-    return page_table;
+    allocation->vacancies = size;
+    return allocation;
 }
 
-int allocate_pages(page_table_t *page_table, process_t *process)
+int allocate_pages(allocation_t *allocation, int memory_KB, page_table_t *page_table, int id, int time)
 {
     /*
         in order to allocate memory we search the page table to find vacant pages
     */
     // search for block
     int num_pages = 0;
-    num_pages = (process->memory_KB / 4) + !(process->memory_KB % PAGE_SIZE == 0);
+    num_pages = page_table->amount;
 
-    if (page_table->vacancies < num_pages)
+    if (allocation->vacancies < num_pages)
     {
         return 0;
     }
 
     int count = 0;
-    process->pages = (int *)malloc(sizeof(int) * num_pages);
+    page_table->allocation = (int *)malloc(sizeof(int) * num_pages);
 
-    for (int i = 0; (i < page_table->size); i++)
+    for (int i = 0; (i < allocation->size); i++)
     {
-        if (((page_table->allocations)[i]) == -1)
+        if (((allocation->allocations)[i]->id) == -1)
         {
-            (process->pages)[count] = i;
+            (page_table->allocation)[count] = i;
             count++;
 
-            (page_table->allocations)[i] = process->id;
-            (page_table->vacancies)--;
+            (allocation->allocations)[i]->id = id;
+            (allocation->allocations)[i]->time = time;
+            (allocation->vacancies)--;
 
             if ((count == num_pages)) // found enough pages
             {
+                page_table->amount = num_pages;
+                page_table->allocated = TRUE;
+                page_table->current_amount = num_pages;
                 return 1;
             }
         }
@@ -55,24 +61,35 @@ int allocate_pages(page_table_t *page_table, process_t *process)
 }
 
 // deallocate memory
-void deallocate_page_table(page_table_t *page_table, int id)
+void deallocate_allocation(allocation_t *allocation, int id)
 {
     /*
         free memory from the page table
     */
-    for (int i = 0; i < page_table->size; i++)
+    for (int i = 0; i < allocation->size; i++)
     {
-        if ((page_table->allocations)[i] == id)
+        if ((allocation->allocations)[i]->id == id)
         {
-            (page_table->allocations)[i] = -1;
-            (page_table->vacancies)++;
+            (allocation->allocations)[i]->id = -1;
+            (allocation->allocations)[i]->time = -1;
+            (allocation->vacancies)++;
         }
     }
 }
 
 // destroy table not necessary as was statically allocated.
-void destroy_table(page_table_t *page_table)
+void destroy_table(allocation_t *allocation)
+{   
+    free(allocation->allocations);
+    free(allocation);
+}
+
+void print_table(page_table_t *page_table)
 {
-    free(page_table->allocations);
-    free(page_table);
+    printf("mem-frames=[");
+    for (int i = 0; i < page_table->allocated - 1; i++)
+    {
+        printf("%d,", page_table->allocation[i]);
+    }
+    printf("%d]\n", page_table->allocation[page_table->allocated - 1]);
 }

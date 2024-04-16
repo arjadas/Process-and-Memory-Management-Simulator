@@ -1,7 +1,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 #include "memory.h"
-
+#include "page.h"
 #define FINISHED 0
 #define READY 1
 #define RUNNING 2
@@ -14,6 +14,7 @@ typedef struct
     int id;
     int arrival_time;
     int remaining_time;
+    int last_executed;
     unsigned long int service_time; // check data type
     int completion_time;
     int turnaround_time;
@@ -21,7 +22,7 @@ typedef struct
     int memory_KB;
     int status;
     memory_t *allocation;
-    int *pages;
+    page_table_t *page_table;
 } process_t;
 
 process_t *create_process();

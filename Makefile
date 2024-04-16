@@ -1,8 +1,11 @@
-allocate: main.o read.o process.o task1.o queue.o task2.o bitmap.o helperfunctions.o page.o
-	gcc -Wall -o allocate main.o read.o process.o task1.o queue.o task2.o bitmap.o helperfunctions.o page.o -lm
+allocate: main.o read.o process.o task1.o queue.o task2.o bitmap.o helperfunctions.o page.o task3.o
+	gcc -Wall -o allocate main.o read.o process.o task1.o queue.o task2.o bitmap.o helperfunctions.o page.o task3.o -lm
 
-main.o: main.c read.h process.h queue.h task1.h task2.h helperfunctions.h
+main.o: main.c read.h process.h queue.h task1.h task2.h task3.h page.h helperfunctions.h
 	gcc -Wall -o main.o main.c -c
+
+task3.o: task3.c task3.h read.h process.h queue.h page.h
+	gcc -Wall -o task3.o task3.c -c
 
 task2.o: task2.c read.h process.h queue.h memory.h bitmap.h
 	gcc -Wall -o task2.o task2.c -c
@@ -25,7 +28,7 @@ process.o: process.c process.h memory.h page.h
 bitmap.o: bitmap.c bitmap.h process.h memory.h
 	gcc -Wall -o bitmap.o bitmap.c -c
 
-page.o: page.c page.h process.h
+page.o: page.c page.h process.h queue.h
 	gcc -Wall -o page.o page.c -c
 
 clean:

@@ -103,6 +103,11 @@ void free_process(process_t *process)
         {
             free(process->allocation);
         }
+        if (process->page_table != NULL)
+        {
+            free(process->page_table->allocation);
+            free(process->page_table);
+        }
         free(process);
     }
 }

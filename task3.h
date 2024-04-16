@@ -2,16 +2,19 @@
 #define TASK3_H
 
 #include "process.h"
-#include "memory.h"
 #include "queue.h"
-#include "bitmap.h"
+#include "page.h"
 
 #define TRUE 1
 #define FALSE 0
 #define T3_SIZE 512
 
-void initial_memory_allocation(process_t **processes, int *num_processes, bitmap_t *bitmap);
-void print_process2(process_t *process);
-process_t *get_next_process(queue_t *queue, bitmap_t *bitmap);
-void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t *bitmap);
+void initial_page_allocation(process_t **processes, allocation_t *allocation);
+void print_process3(process_t *process);
+void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, int *makespan, allocation_t *allocation);
+process_t *least_recently_executed(process_t **processes, int num_processes);
+int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process);
+process_t *get_next_paged_process(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes);
+// process_t *get_next_process(queue_t *queue, bitmap_t *bitmap);
+// void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t *bitmap);
 #endif
