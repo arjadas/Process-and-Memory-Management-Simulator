@@ -144,9 +144,7 @@ read_t *process_arguments(int argc, char const *argv[])
     {
         if (argv[i][1] == 'f')
         {
-            inputs->filename = (char *)malloc(sizeof(char) * (strlen(argv[i + 1]) + 1));
-            assert(inputs->filename);
-            strcpy(inputs->filename, argv[i + 1]);
+            inputs->filename = strdup(argv[i + 1]);
             assert(inputs->filename);
         }
         else if (argv[i][1] == 'm')
@@ -172,7 +170,7 @@ int get_strategy(const char *strategy)
             - virtual
     */
     char infinite[] = "infinite";
-    char first_fit[] = "first fit";
+    char first_fit[] = "first-fit";
     char paged[] = "paged";
     char virtual[] = "virtual";
     if (strcmp(strategy, infinite) == 0)

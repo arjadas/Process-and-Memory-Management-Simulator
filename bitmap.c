@@ -8,17 +8,20 @@
 
 // we're cheating by not using actual bits
 
-bitmap_t make_bitmap()
+bitmap_t *make_bitmap(int size)
 {
-    bitmap_t bitmap = (int *)malloc(sizeof(int)*2048);
-    for (int i = 0; i < 2048; i++)
+    bitmap_t *bitmap = (bitmap_t *)malloc(sizeof(bitmap_t));
+    bitmap->bitmap = (int *)malloc(sizeof(int)*size);
+    bitmap->size = size;
+    for (int i = 0; i < size; i++)
     {
-        bitmap[i] = 0;
+        bitmap->bitmap[i] = 0;
     }
+    bitmap->allocated = 0;
     return bitmap;
 }
 
-int allocate_memory(bitmap_t bitmap, process_t *process)
+int allocate_memory(bitmap_t *bitmap, process_t *process)
 {
     /*
         in order to allocate memory we need to iterate through 
@@ -31,17 +34,17 @@ int allocate_memory(bitmap_t bitmap, process_t *process)
     int num_bytes = process->memory_KB;
     
 
-    for (int i = 0; i < 2048; i++)
+    for (int i = 0; i < bitmap->size; i++)
     {
-        if ((bitmap[i] == 0) && (count == 0))
+        if (((bitmap->bitmap)[i] == 0) && (count == 0))
         {
             start = i;
             count += 1;
         }
-        else if ((bitmap[i]) == 0 && (count > 0))
+        else if (((bitmap->bitmap)[i]) == 0 && (count > 0))
         {
             count += 1;
-            if ((bitmap[i] == 0) && (count == num_bytes)) // found a bit enough block
+            if (((bitmap->bitmap)[i] == 0) && (count == num_bytes)) // found a bit enough block
             {
                 process->allocation->start = start;
                 process->allocation->end = i;
@@ -50,14 +53,15 @@ int allocate_memory(bitmap_t bitmap, process_t *process)
                 // allocate the memory
                 for (int j = start; j <= i; j++)
                 {
-                    bitmap[j] = 1;
+                    (bitmap->bitmap)[j] = 1;
                 }
                 // allocation was successful
+                bitmap->allocated += process->memory_KB;
                 return 1;
             }
 
         }
-        else if (bitmap[i] == 1)
+        else if ((bitmap->bitmap)[i] == 1)
         {
             start = -1, count = 0;
         }
@@ -67,17 +71,23 @@ int allocate_memory(bitmap_t bitmap, process_t *process)
 }
 
 // deallocate memory
-int deallocate_bitmap(bitmap_t bitmap, int start, int end)
+int deallocate_bitmap(bitmap_t *bitmap, memory_t *memory)
 {
     /*
         free memory
     */
     // need to find memory to free; end is inclusive
-    for (int i = start; i <= end; i++)
+    for (int i = memory->start; i <= memory->end; i++)
     {
-        bitmap[i] = 0;
+        (bitmap->bitmap)[i] = 0;
     }
+    bitmap->allocated -= memory->quantity;
     return 0;
 }
 
 // destroy map not necessary as was statically allocated.
+void destroy_map(bitmap_t *bitmap)
+{
+    free(bitmap->bitmap);
+    free(bitmap);
+}

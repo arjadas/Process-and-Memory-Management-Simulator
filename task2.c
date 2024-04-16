@@ -9,19 +9,12 @@
 #include "bitmap.h"
 #include "task2.h"
 
-void initial_memory_allocation(process_t **processes, int *num_processes, bitmap_t bitmap)
+void initial_memory_allocation(process_t **processes, int *num_processes, bitmap_t *bitmap)
 {
     /*
-        make a linked list and allocate memory to the processes
+        allocate memory to the first process
     */
-
-    for (int i = 0; i < *num_processes; i++)
-    {
-        // enqueue node
-
-        // allocate memory (if possible)
-        allocate_memory(bitmap, processes[i]);
-    }
+    allocate_memory(bitmap, processes[0]);
 } 
 
 void print_process2(process_t *process)
@@ -30,7 +23,7 @@ void print_process2(process_t *process)
            process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end, process->allocation->quantity);
 }
 
-void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t bitmap)
+void scheduler(process_t **processes, queue_t *queue, int num_process, int quantum, int *makespan, bitmap_t *bitmap)
 {
     /*
         scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation,
@@ -65,14 +58,12 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
 
                 remaining_process--;
                 ready_process_remaining = get_queue_length(queue);
-                printf("%d, %s, process-name=%s, proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
+                printf("%d,%s,process-name=%s,proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
 
                 current_process->completion_time = simulation_time; //  time of completion for the process
                 current_process->turnaround_time = simulation_time - current_process->arrival_time;
                 current_process->time_overhead = (current_process->turnaround_time * 1.0) / current_process->service_time; // multiply with 1.0 to convert to float/double
-                deallocate_bitmap(bitmap, current_process->allocation->start, current_process->allocation->end);
-                // no need to enqueue as process is finished
-                // free_process(current_process);
+                deallocate_bitmap(bitmap, current_process->allocation);
                 current_process = NULL;
 
                 if (remaining_process == 0 && is_empty(queue))
@@ -103,9 +94,9 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
             {
                 change_status(current_process, RUNNING);
                 // if (previous_process != current_process)
-                printf("%d, %s, process-name=%s, remaining-time=%d, mem-usage=%d, allocated-at=%d\n",
+                printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.f%%,allocated-at=%d\n",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
-                       (current_process->memory_KB) / 2048, current_process->allocation->start);
+                       ((float)(bitmap->allocated) / 2048)*100, current_process->allocation->start);
             }
         }
 
@@ -121,7 +112,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
     *makespan = simulation_time;
 }
 
-process_t *get_next_process(queue_t *queue, bitmap_t bitmap)
+process_t *get_next_process(queue_t *queue, bitmap_t *bitmap)
 {
     /*
         get next process that has been allocated memory, if no memory allocation and
@@ -134,6 +125,7 @@ process_t *get_next_process(queue_t *queue, bitmap_t bitmap)
     while (i < queue->length)
     {
         temp = dequeue(queue);
+        assert(temp != NULL);
         if (temp->allocation->quantity == temp->memory_KB)
         {
             process = temp;
