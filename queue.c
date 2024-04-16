@@ -5,7 +5,7 @@
 #include <assert.h>
 
 // function to create a new queue
-queue_t *createQueue()
+queue_t *create_queue()
 {
 
     queue_t *queue = (queue_t *)malloc(sizeof(queue_t));
@@ -19,7 +19,7 @@ queue_t *createQueue()
 }
 
 // function to check whether the queue is empty
-int isEmpty(queue_t *queue)
+int is_empty(queue_t *queue)
 {
     return (queue->head == NULL);
 }
@@ -38,7 +38,7 @@ void enqueue(queue_t *queue, process_t *process)
     newNode->data = process;
     newNode->next = NULL;
 
-    if (isEmpty(queue))
+    if (is_empty(queue))
     {
         queue->head = newNode;
         queue->tail = newNode;
@@ -60,7 +60,7 @@ process_t *dequeue(queue_t *queue)
     */
 
     // perhaps we should return NULL instead?
-    if (isEmpty(queue))
+    if (is_empty(queue))
     {
         printf("%s", "Queue is empty, nothing to dequeue"); // is it a proper response?
         return NULL;
@@ -89,18 +89,18 @@ process_t *dequeue(queue_t *queue)
     return data;
 }
 
-void emptyQueue(queue_t *queue)
+void empty_queue(queue_t *queue)
 {
     /*
         function to destroy the queue
     */
 
-    if (isEmpty(queue))
+    if (is_empty(queue))
     {
         printf("%s", "Queue already empty"); // is it a proper response?
     }
 
-    while (!isEmpty(queue))
+    while (!is_empty(queue))
     {
         // node is already getting free'd while dequeuing
         dequeue(queue);
@@ -108,4 +108,23 @@ void emptyQueue(queue_t *queue)
 
     // freeing the queue
     free(queue);
+}
+
+int get_queue_length(queue_t *queue)
+{
+    /*
+        function to return length of the queue
+    */
+
+    /*
+     int len = 0;
+
+     if (is_empty(queue)) {
+         return len;
+     } else {
+         return queue->length;
+     }
+     */
+
+    return queue->length;
 }

@@ -5,8 +5,9 @@
 #include "read.h"
 #include "process.h"
 #include "queue.h"
-#include "roundrobin.h"
+#include "task1.h"
 #include "task2.h"
+#include "helperfunctions.h"
 
 int main(int argc, char const *argv[])
 {
@@ -19,9 +20,9 @@ int main(int argc, char const *argv[])
 
     read_t *inputs = process_arguments(argc, argv);
     process_t **processes = read_processes(inputs, &num_processes);
-    queue_t *queue = createQueue();
+    queue_t *queue = create_queue();
 
-    if (inputs->memory == INFINITE) 
+    if (inputs->memory == INFINITE)
     {
         // task 1
         round_robin(processes, queue, num_processes, inputs->quantum, &makespan);
@@ -43,9 +44,8 @@ int main(int argc, char const *argv[])
     {
         /* code */
     }
-    
 
-    //free(queue);
+    // free(queue);
 
     return 0;
 }
