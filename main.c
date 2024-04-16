@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
     else if (inputs->memory == PAGED)
     {
         // task 3
-        bitmap_t *bitmap = make_bitmap(T3_SIZE);
+        // bitmap_t *bitmap = make_bitmap(T3_SIZE);
 
     }
     else if (inputs->memory == VIRTUAL)
@@ -51,6 +51,7 @@ int main(int argc, char const *argv[])
 
     free(queue);
     free_processes(processes, num_processes);
+    free(inputs);
 
     return 0;
 }

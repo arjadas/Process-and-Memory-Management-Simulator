@@ -184,3 +184,16 @@ int get_strategy(const char *strategy)
 
     return -1;
 }
+
+void free_inputs(read_t *inputs)
+{
+    if (inputs != NULL)
+    {
+        if (inputs->filename != NULL)
+        {
+            free(inputs->filename);
+        }
+        free(inputs);
+    }
+    
+}

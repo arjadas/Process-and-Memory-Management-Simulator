@@ -30,5 +30,6 @@ void reset_buffer(char *buffer, int *length);
 void parse_value(process_t *process, char *buffer, enum Input column);
 void add_buffer(char *buffer, int i, char letter);
 process_t **resize_processes(process_t **processes, int *size);
+void free_inputs(read_t *inputs);
 
 #endif
