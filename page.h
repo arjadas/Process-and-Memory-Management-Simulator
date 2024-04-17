@@ -4,6 +4,7 @@
 
 #define PAGE_SIZE 4
 #define TRUE 1
+#define FALSE 0
 
 typedef struct page_table
 {
@@ -16,7 +17,7 @@ typedef struct page_table
 typedef struct page
 {
     int id;
-    unsigned long int time;
+    int evicted;
 } page_t;
 
 typedef struct 
@@ -27,9 +28,11 @@ typedef struct
 } allocation_t;
 
 allocation_t *make_allocation(int size);
-int allocate_pages(allocation_t *allocation, int memory_KB, page_table_t *page_table, int id, int time);
-void deallocate_allocation(allocation_t *allocation, int id);
+int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id);
+void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, int id, int time);
 void destroy_table(allocation_t *allocation);
 void print_table(page_table_t *page_table);
+void print_eviction(allocation_t *allocation, int time);
+void print_allocation(allocation_t *allocation);
 
 #endif

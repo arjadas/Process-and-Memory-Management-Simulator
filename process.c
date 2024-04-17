@@ -11,10 +11,25 @@ process_t *create_process()
     /*
         makes a process by taking in necesary input and allocating memory to store
         the process's information
+        char *name;
+    int id;
+    int arrival_time;
+    int remaining_time;
+    int last_executed;
+    unsigned long int service_time; // check data type
+    int completion_time;
+    int turnaround_time;
+    double time_overhead; // data type - double
+    int memory_KB;
+    int status;
+    memory_t *allocation;
+    page_table_t *page_table;
     */
 
     process_t *process = (process_t *)malloc(sizeof(process_t));
     assert(process);
+    process->allocation = NULL;
+    process->page_table = NULL;
     return process;
 }
 

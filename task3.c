@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <math.h>
 #include "read.h"
 #include "process.h"
 #include "memory.h"
@@ -14,15 +15,14 @@ void initial_page_allocation(process_t **processes, allocation_t *allocation)
     /*
         allocate memory to the first process
     */
-   int time = 0;
-    allocate_pages(allocation, processes[0]->memory_KB, processes[0]->page_table, processes[0]->id, time);
+    allocate_pages(allocation, processes[0]->page_table, processes[0]->id);
 } 
 
 void print_process3(process_t *process)
 {
-    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d, %d\n",
-           process->name, process->arrival_time, process->service_time, process->memory_KB, process->page_table->allocation[0], process->page_table->allocation[1]);
-           print_table(process->page_table);
+    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Amount: %d\n",
+           process->name, process->arrival_time, process->service_time, process->memory_KB, process->page_table->amount);
+           // print_table(process->page_table);
 }
 
 void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, int *makespan, allocation_t *allocation)
@@ -49,24 +49,24 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
             submitted_process++;
         }
 
-        // a cycle of looping
-
         // step 2: check if current process has completed its execution
 
         if (current_process != NULL)
         {
+            // if process is finished
             if (current_process->remaining_time <= 0)
             {
                 change_status(current_process, FINISHED);
 
                 remaining_process--;
                 ready_process_remaining = get_queue_length(queue);
-                printf("%d,%s,process-name=%s,proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
 
                 current_process->completion_time = simulation_time; //  time of completion for the process
                 current_process->turnaround_time = simulation_time - current_process->arrival_time;
                 current_process->time_overhead = (current_process->turnaround_time * 1.0) / current_process->service_time; // multiply with 1.0 to convert to float/double
-                deallocate_allocation(allocation, current_process->id);
+                deallocate_allocation(allocation, current_process->page_table, current_process->id, simulation_time);
+                print_eviction(allocation, simulation_time);
+                printf("%d,%s,process-name=%s,proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
                 current_process = NULL;
 
                 if (remaining_process == 0 && is_empty(queue))
@@ -78,7 +78,6 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
             else
             {
                 // requires more time
-
                 if (!is_empty(queue))
                 {
                     change_status(current_process, READY);
@@ -92,12 +91,12 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
 
         if (current_process == NULL && !is_empty(queue))
         {
-            current_process = get_next_paged_process(queue, allocation, processes, num_processes);
+            current_process = get_next_paged_process(queue, allocation, processes, num_processes, simulation_time);
             if (current_process != NULL)
             {
                 change_status(current_process, RUNNING);
-                percentage = ((float)((allocation->size) - (allocation->vacancies))/ allocation->size)*100;
-                printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.f%%",
+                percentage = ceil((100 * (float)((allocation->size) - (allocation->vacancies))/ allocation->size));
+                printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.0f%%,",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        percentage);
                 print_table(current_process->page_table);
@@ -116,38 +115,31 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
     *makespan = simulation_time;
 }
 
-int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process)
+int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
 {
     // step 2: evict process from pages and allocate pages to new process
     process_t *evicted = NULL;
-    int page = -1, current_amount = -1;
-    while (process->page_table->allocated != TRUE)
+    while (allocation->vacancies < process->page_table->amount)
     {
         // step 1: find page that was least recently executed
         evicted = least_recently_executed(processes, num_processes);
+        assert(evicted);
 
         // step 2: evict process from pages and allocate pages to new process
-        for (int i = 0; (i < evicted->page_table->amount) && (process->page_table->current_amount <= process->page_table->amount); i++)
-        {
-            page = (evicted->page_table->allocation)[i];
-            current_amount = process->page_table->current_amount;
-            (process->page_table->allocation)[i + current_amount] = page;
-            allocation->allocations[page]->id = process->id;
-            (evicted->page_table->allocation)[i] = -1;
-            (process->page_table->current_amount)++;
-        }
-        if (process->page_table->current_amount == process->page_table->amount)
-        {
-            process->page_table->allocated = TRUE;
-            break;
-            return 1;
-        }
+        deallocate_allocation(allocation, evicted->page_table, evicted->id, time);
     }
+    print_eviction(allocation, time);
+
+    // now we have enough pages available
+    allocate_pages(allocation, process->page_table, process->id);
     return 0;
 }
 
 process_t *least_recently_executed(process_t **processes, int num_processes)
 {
+    /* 
+        linear search to find the least recently executed
+    */
     int current_min = 0;
     process_t *temp = processes[0];
     assert(processes);
@@ -161,7 +153,7 @@ process_t *least_recently_executed(process_t **processes, int num_processes)
     return temp;
 }
 
-process_t *get_next_paged_process(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes)
+process_t *get_next_paged_process(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes, int time)
 {
     /*
         get next process that has been allocated memory, if no memory allocation and
@@ -172,7 +164,15 @@ process_t *get_next_paged_process(queue_t *queue, allocation_t *allocation, proc
     process = dequeue(queue);
     if (process->page_table->allocated != TRUE)
     {
-        evict_and_allocate(allocation, processes, num_processes, process);
+        // first check if there are enough free pages in the allocation block
+        if ((allocation->vacancies) >= (process->page_table->amount))
+        {
+            allocate_pages(allocation, process->page_table, process->id);
+        }
+        else
+        {
+            evict_and_allocate(allocation, processes, num_processes, process, time);
+        }
     }
     return process;
 }

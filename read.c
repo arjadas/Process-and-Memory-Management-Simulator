@@ -135,11 +135,23 @@ void assign_memory(process_t *process, int management)
         process->allocation->quantity = 0;
         process->page_table = NULL;
     }
+    else if (management == INFINITE)
+    {
+        process->page_table = NULL;
+        process->allocation = NULL;
+    }
     else
     {
         process->allocation = NULL;
         process->page_table = (page_table_t *)malloc(sizeof(page_table_t));
-        process->page_table->amount = (process->memory_KB / 4) + !(process->memory_KB % 4 == 0);
+        if (process->memory_KB % 4 == 0)
+        {
+            process->page_table->amount = (process->memory_KB / 4);
+        }
+        else
+        {
+            process->page_table->amount = (process->memory_KB / 4) + 1;
+        }
     }
 }
 
