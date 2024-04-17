@@ -128,6 +128,7 @@ void assign_memory(process_t *process, int management)
     /*
         allocates memory depending on the memory management strategy
     */
+   int pages = 0;
 
     if (management == FIRST_FIT)
     {
@@ -146,12 +147,16 @@ void assign_memory(process_t *process, int management)
         process->page_table = (page_table_t *)malloc(sizeof(page_table_t));
         if (process->memory_KB % 4 == 0)
         {
-            process->page_table->amount = (process->memory_KB / 4);
+            pages = (process->memory_KB / 4);
         }
         else
         {
-            process->page_table->amount = (process->memory_KB / 4) + 1;
+            pages = (process->memory_KB / 4) + 1;
         }
+        process->page_table->allocation = (int *)malloc(sizeof(int) * pages);
+        process->page_table->amount = pages;
+        process->page_table->current_amount = 0;
+        process->page_table->allocated = FALSE;
     }
 }
 
