@@ -31,8 +31,10 @@ int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
     {
         return 0;
     }
-
-    page_table->allocation = (int *)malloc(sizeof(int) * page_table->amount);
+    if (page_table->allocation == NULL)
+    {
+        page_table->allocation = (int *)malloc(sizeof(int) * page_table->amount);
+    }
 
     for (int i = 0; (i < allocation->size); i++)
     {
@@ -80,8 +82,22 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
 // destroy table not necessary as was statically allocated.
 void destroy_table(allocation_t *allocation)
 {   
-    free(allocation->allocations);
-    free(allocation);
+    if (allocation != NULL)
+    {
+        if (allocation->allocations != NULL)
+        {
+            for (int i = 0; i < allocation->size; i++)
+            {
+                if (allocation->allocations[i] != NULL)
+                {
+                    free(allocation->allocations[i]);
+                }
+        
+            }
+            free(allocation->allocations);
+        }
+        free(allocation);
+    }
 }
 
 void print_allocation(allocation_t *allocation)
