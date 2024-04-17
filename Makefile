@@ -4,7 +4,7 @@ allocate: main.o read.o process.o task1.o queue.o task2.o bitmap.o helperfunctio
 main.o: main.c read.h process.h queue.h task1.h task2.h task3.h page.h helperfunctions.h
 	gcc -Wall -o main.o main.c -c
 
-task3.o: task3.c task3.h read.h process.h queue.h page.h
+task3.o: task3.c task3.h read.h process.h queue.h page.h memory.h
 	gcc -Wall -o task3.o task3.c -c
 
 task2.o: task2.c read.h process.h queue.h memory.h bitmap.h

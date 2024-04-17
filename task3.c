@@ -16,13 +16,13 @@ void initial_page_allocation(process_t **processes, allocation_t *allocation)
         allocate memory to the first process
     */
     allocate_pages(allocation, processes[0]->page_table, processes[0]->id);
-} 
+}
 
 void print_process3(process_t *process)
 {
     printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Amount: %d\n",
            process->name, process->arrival_time, process->service_time, process->memory_KB, process->page_table->amount);
-           // print_table(process->page_table);
+    // print_table(process->page_table);
 }
 
 void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, int *makespan, allocation_t *allocation)
@@ -95,7 +95,7 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
             if (current_process != NULL)
             {
                 change_status(current_process, RUNNING);
-                percentage = ceil((100 * (float)((allocation->size) - (allocation->vacancies))/ allocation->size));
+                percentage = ceil((100 * (float)((allocation->size) - (allocation->vacancies)) / allocation->size));
                 printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.0f%%,",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        percentage);
@@ -137,7 +137,7 @@ int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_
 
 process_t *least_recently_executed(process_t **processes, int num_processes)
 {
-    /* 
+    /*
         linear search to find the least recently executed
     */
     int current_min = 0;
