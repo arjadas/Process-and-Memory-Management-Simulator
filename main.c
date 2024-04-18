@@ -8,6 +8,7 @@
 #include "task1.h"
 #include "task2.h"
 #include "task3.h"
+#include "task4.h"
 #include "helperfunctions.h"
 #include "page.h"
 
@@ -47,12 +48,11 @@ int main(int argc, char const *argv[])
         paged_scheduler(processes, queue, num_processes, inputs->quantum, &makespan, allocation);
         print_statistics(processes, num_processes, makespan);
         destroy_table(allocation);
-
     }
     else if (inputs->memory == VIRTUAL)
     {
         /* code */
-    }
+        }
 
     free(queue);
     free_processes(processes, num_processes);

@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
+#include <math.h>
+#include "read.h"
+#include "process.h"
+#include "memory.h"
+#include "queue.h"
+#include "page.h"
+#include "task4.h"
