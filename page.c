@@ -62,6 +62,7 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
     /*
         free memory from the page table
     */
+   // first set pages in allocation block to -1
     for (int i = 0; i < allocation->size; i++)
     {
         if ((allocation->allocations)[i]->id == id)
@@ -71,6 +72,8 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
             (allocation->vacancies) += 1;
         }
     }
+
+    // then set the allocation array for the process to -1
     for (int i = 0; i < page_table->amount; i++)
     {
         (page_table->allocation)[i] = -1;

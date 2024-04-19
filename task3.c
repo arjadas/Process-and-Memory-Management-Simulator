@@ -117,15 +117,15 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
 
 int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
 {
-    // step 2: evict process from pages and allocate pages to new process
+    // step 1: evict process from pages and allocate pages to new process
     process_t *evicted = NULL;
     while (allocation->vacancies < process->page_table->amount)
     {
-        // step 1: find page that was least recently executed
-        evicted = least_recently_executed(processes, num_processes);
+        // step 2: find page that was least recently executed
+        evicted = least_recently_executed(processes, num_processes, time);
         assert(evicted);
 
-        // step 2: evict process from pages and allocate pages to new process
+        // step 3: evict process from pages and allocate pages to new process
         deallocate_allocation(allocation, evicted->page_table, evicted->id, time);
     }
     print_eviction(allocation, time);
@@ -135,12 +135,12 @@ int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_
     return 0;
 }
 
-process_t *least_recently_executed(process_t **processes, int num_processes)
+process_t *least_recently_executed(process_t **processes, int num_processes, int time)
 {
     /*
         linear search to find the least recently executed
     */
-    int current_min = 0;
+    int current_min = time;
     process_t *temp = processes[0];
     assert(processes);
     for (int i = 0; i < num_processes; i++)
@@ -148,6 +148,7 @@ process_t *least_recently_executed(process_t **processes, int num_processes)
         if ((current_min > (processes[i])->last_executed) && (processes[i]->page_table->allocated == TRUE))
         {
             temp = processes[i];
+            current_min = (processes[i])->last_executed;
         }
     }
     return temp;

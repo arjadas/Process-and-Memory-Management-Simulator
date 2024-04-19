@@ -8,23 +8,23 @@
 
 typedef struct page_table
 {
-    int *allocation;
-    int allocated;
-    int amount; 
-    int current_amount;
+    int *allocation; // stores the page numbers of the pages allocated to the process
+    int allocated; // true or false: if pages have been allocated to process or not
+    int amount; // the total number of pages required
+    int current_amount; // the number of pages currently allocated
 } page_table_t;
 
 typedef struct page
 {
-    int id;
-    int evicted;
+    int id; // page number
+    int evicted; // time that a pages was evicted from a process
 } page_t;
 
 typedef struct 
 {
-    page_t **allocations;
-    int vacancies;  
-    int size;
+    page_t **allocations; // stores all the pages that can be allocated 
+    int vacancies; // number of available pages
+    int size; // number of pages that can be allocated
 } allocation_t;
 
 allocation_t *make_allocation(int size);
