@@ -29,8 +29,9 @@ int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
 
     if (allocation->vacancies < page_table->amount)
     {
-        return 0;
+        return 0; // i see no use of this condition
     }
+
     if (page_table->allocation == NULL)
     {
         page_table->allocation = (int *)malloc(sizeof(int) * page_table->amount);
@@ -46,7 +47,7 @@ int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
             (allocation->allocations)[i]->evicted = -1;
             (allocation->vacancies)--;
 
-            if ((page_table->current_amount == page_table->amount)) // found enough pages
+            if ((page_table->current_amount == page_table->amount)) // found enough pages, all pages allocated
             {
                 page_table->allocated = TRUE;
                 return 1;
@@ -62,7 +63,7 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
     /*
         free memory from the page table
     */
-   // first set pages in allocation block to -1
+    // first set pages in allocation block to -1
     for (int i = 0; i < allocation->size; i++)
     {
         if ((allocation->allocations)[i]->id == id)
@@ -84,7 +85,7 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
 
 // destroy table not necessary as was statically allocated.
 void destroy_table(allocation_t *allocation)
-{   
+{
     if (allocation != NULL)
     {
         if (allocation->allocations != NULL)
@@ -95,7 +96,6 @@ void destroy_table(allocation_t *allocation)
                 {
                     free(allocation->allocations[i]);
                 }
-        
             }
             free(allocation->allocations);
         }
@@ -109,7 +109,6 @@ void print_allocation(allocation_t *allocation)
     {
         printf("allocations[i] = %d\n", (allocation->allocations)[i]->id);
     }
-    
 }
 
 void print_table(page_table_t *page_table)
@@ -124,10 +123,10 @@ void print_table(page_table_t *page_table)
 
 void print_eviction(allocation_t *allocation, int time)
 {
-    /* 
+    /*
         prints this: <time>,EVICTED,evicted-frames=<[frames]>
     */
-    
+
     printf("%d,EVICTED,evicted-frames=[", time);
     int num_printed = 1, num_pages = 0;
     for (int i = 0; i < allocation->size; i++)
@@ -143,14 +142,14 @@ void print_eviction(allocation_t *allocation, int time)
         {
             if (num_printed < num_pages)
             {
-                printf("%d,", i); num_printed++;
+                printf("%d,", i);
+                num_printed++;
             }
             else if (num_pages == num_printed)
             {
                 printf("%d", i);
             }
         }
-        
     }
     printf("]\n");
 }

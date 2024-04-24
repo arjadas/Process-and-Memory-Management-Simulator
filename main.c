@@ -51,8 +51,13 @@ int main(int argc, char const *argv[])
     }
     else if (inputs->memory == VIRTUAL)
     {
-        /* code */
-        }
+        // task 4
+        allocation_t *allocation = make_allocation(T3_SIZE);
+        initial_page_allocation(processes, allocation);
+        virtual_memory_scheduler(processes, queue, num_processes, inputs->quantum, &makespan, allocation);
+        print_statistics(processes, num_processes, makespan);
+        destroy_table(allocation);
+    }
 
     free(queue);
     free_processes(processes, num_processes);
