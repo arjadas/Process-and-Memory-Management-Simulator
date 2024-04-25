@@ -13,8 +13,8 @@ allocation_t *make_allocation(int size)
     for (int i = 0; i < size; i++)
     {
         (allocation->allocations)[i] = (page_t *)malloc(sizeof(page_t));
-        (allocation->allocations)[i]->id = -1;
-        (allocation->allocations)[i]->evicted = -1;
+        (allocation->allocations)[i]->id = NOT_SET;
+        (allocation->allocations)[i]->evicted = NOT_SET;
     }
     allocation->vacancies = size;
     return allocation;
@@ -39,12 +39,12 @@ int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
 
     for (int i = 0; (i < allocation->size); i++)
     {
-        if (((allocation->allocations)[i]->id) == -1)
+        if (((allocation->allocations)[i]->id) == NOT_SET)
         {
             (page_table->allocation)[page_table->current_amount] = i;
             (page_table->current_amount)++;
             (allocation->allocations)[i]->id = id;
-            (allocation->allocations)[i]->evicted = -1;
+            (allocation->allocations)[i]->evicted = NOT_SET;
             (allocation->vacancies)--;
 
             if ((page_table->current_amount == page_table->amount)) // found enough pages, all pages allocated
@@ -63,21 +63,21 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
     /*
         free memory from the page table
     */
-    // first set pages in allocation block to -1
+    // first set pages in allocation block to NOT_SET
     for (int i = 0; i < allocation->size; i++)
     {
         if ((allocation->allocations)[i]->id == id)
         {
-            (allocation->allocations)[i]->id = -1;
+            (allocation->allocations)[i]->id = NOT_SET;
             (allocation->allocations)[i]->evicted = time;
             (allocation->vacancies) += 1;
         }
     }
 
-    // then set the allocation array for the process to -1
+    // then set the allocation array for the process to NOT_SET
     for (int i = 0; i < page_table->amount; i++)
     {
-        (page_table->allocation)[i] = -1;
+        (page_table->allocation)[i] = NOT_SET;
         (page_table->current_amount)--;
     }
     page_table->allocated = FALSE;

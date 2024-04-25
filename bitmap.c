@@ -11,7 +11,7 @@
 bitmap_t *make_bitmap(int size)
 {
     bitmap_t *bitmap = (bitmap_t *)malloc(sizeof(bitmap_t));
-    bitmap->bitmap = (int *)malloc(sizeof(int)*size);
+    bitmap->bitmap = (int *)malloc(sizeof(int) * size);
     bitmap->size = size;
     for (int i = 0; i < size; i++)
     {
@@ -24,7 +24,7 @@ bitmap_t *make_bitmap(int size)
 int allocate_memory(bitmap_t *bitmap, process_t *process)
 {
     /*
-        in order to allocate memory we need to iterate through 
+        in order to allocate memory we need to iterate through
         bits to find a chunk of free memory of num_bytes
         then need to return the allocation
         an implementation of the FIRST-FIT algorithm
@@ -32,7 +32,6 @@ int allocate_memory(bitmap_t *bitmap, process_t *process)
     // search for block
     int start = -1, count = 0;
     int num_bytes = process->memory_KB;
-    
 
     for (int i = 0; i < bitmap->size; i++)
     {
@@ -49,7 +48,7 @@ int allocate_memory(bitmap_t *bitmap, process_t *process)
                 process->allocation->start = start;
                 process->allocation->end = i;
                 process->allocation->quantity = process->memory_KB;
-                
+
                 // allocate the memory
                 for (int j = start; j <= i; j++)
                 {
@@ -59,7 +58,6 @@ int allocate_memory(bitmap_t *bitmap, process_t *process)
                 bitmap->allocated += process->memory_KB;
                 return 1;
             }
-
         }
         else if ((bitmap->bitmap)[i] == 1)
         {
@@ -67,7 +65,7 @@ int allocate_memory(bitmap_t *bitmap, process_t *process)
         }
     }
     // allocation failed
-    return -1;
+    return INVALID;
 }
 
 // deallocate memory

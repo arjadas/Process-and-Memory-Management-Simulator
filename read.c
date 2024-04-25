@@ -128,7 +128,7 @@ void assign_memory(process_t *process, int management)
     /*
         allocates memory depending on the memory management strategy
     */
-   int pages = 0;
+    int pages = 0;
 
     if (management == FIRST_FIT)
     {
@@ -157,6 +157,13 @@ void assign_memory(process_t *process, int management)
         process->page_table->amount = pages;
         process->page_table->current_amount = 0;
         process->page_table->allocated = FALSE;
+        process->page_table->start_frame_index = 0;
+
+        // set the ids to NOT_SET
+        for (int i = 0; i < process->page_table->amount; i++)
+        {
+            process->page_table->allocation[i] = NOT_SET;
+        }
     }
 }
 
@@ -190,7 +197,7 @@ read_t *process_arguments(int argc, char const *argv[])
         else if (argv[i][1] == 'm')
         {
             inputs->memory = get_strategy(argv[i + 1]);
-            assert(inputs->memory != -1);
+            assert(inputs->memory != INVALID);
         }
         else if (argv[i][1] == 'q')
         {
@@ -222,7 +229,7 @@ int get_strategy(const char *strategy)
     if (strcmp(strategy, virtual) == 0)
         return VIRTUAL;
 
-    return -1;
+    return INVALID;
 }
 
 void free_inputs(read_t *inputs)
@@ -235,5 +242,4 @@ void free_inputs(read_t *inputs)
         }
         free(inputs);
     }
-    
 }

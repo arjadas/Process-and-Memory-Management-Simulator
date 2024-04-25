@@ -35,7 +35,7 @@ void round_robin(process_t **processes, queue_t *queue, int num_process, int qua
                 change_status(current_process, FINISHED);
                 remaining_process--;
                 ready_process_remaining = get_queue_length(queue);
-                printf("%d, %s, process-name = %s, proc-remaining = %d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
+                printf("%d,%s,process-name=%s,proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
 
                 current_process->completion_time = simulation_time; //  time of completion for the process
                 current_process->turnaround_time = simulation_time - current_process->arrival_time;
@@ -72,7 +72,7 @@ void round_robin(process_t **processes, queue_t *queue, int num_process, int qua
             change_status(current_process, RUNNING);
 
             // if (previous_process != current_process)
-            printf("%d, %s, process-name = %s, remaining-time = %d\n", simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time);
+            printf("%d,%s,process-name=%s,remaining-time=%d\n", simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time);
         }
 
         if (current_process != NULL && current_process->remaining_time > 0)
