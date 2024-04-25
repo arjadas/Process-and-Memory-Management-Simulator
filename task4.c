@@ -103,24 +103,9 @@ void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_pro
 
 void print_table_virtual(page_table_t *page_table)
 {
-    /*
-    printf("mem-frames=[");
-    for (int i = 0; i < page_table->amount; i++)
-    {
-        if (i == 0)
-            printf("%d,", page_table->allocation[i]);
-
-        if (i > 0 && page_table->allocation[i] != NOT_SET)
-            printf("%d", page_table->allocation[i]);
-
-        if (i > 0 && i + 1 < page_table->amount && page_table->allocation[i + 1] != NOT_SET)
-            printf(",");
-    }
-    printf("]\n");
-    */
 
     printf("mem-frames=[");
-    for (int i = 0; i < page_table->amount - 1 && page_table->allocation[i] != NOT_SET; i++)
+    for (int i = page_table->start_frame_index; i < page_table->amount - 1 && page_table->allocation[i] != NOT_SET; i++)
     {
         printf("%d", page_table->allocation[i]);
 
@@ -251,7 +236,7 @@ void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_
 
     int frame_num = NOT_SET;
 
-    for (int i = 0; i < page_table->amount && allocation->vacancies < 4; i++)
+    for (int i = page_table->start_frame_index; i < page_table->amount && allocation->vacancies < 4; i++)
     {
 
         // collect frame number and deallocate from page_table
