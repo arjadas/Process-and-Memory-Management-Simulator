@@ -82,6 +82,7 @@ void add_buffer(char *buffer, int i, char letter)
     /*
         only want to add letter to buffer if it is not white space
     */
+
     if ((letter != '\n') && (letter != ' ') && (letter != EOF))
     {
         buffer[i] = letter;
@@ -129,6 +130,7 @@ void assign_memory(process_t *process, int management)
     /*
         allocates memory depending on the memory management strategy
     */
+
     int pages = 0;
 
     if (management == FIRST_FIT)
@@ -186,6 +188,7 @@ read_t *process_arguments(int argc, char const *argv[])
             - memory strategy to use
             - quantum
     */
+
     read_t *inputs = (read_t *)malloc(sizeof(read_t));
     assert(inputs);
 

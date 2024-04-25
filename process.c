@@ -75,7 +75,7 @@ int change_status(process_t *process, int new_status)
 
     if (status == RUNNING && new_status == FINISHED)
         process->status = new_status;
-        
+
     return new_status;
 }
 
@@ -110,6 +110,7 @@ void free_process(process_t *process)
     /*
         frees the string stored in process then frees the process itself
     */
+
     if (process != NULL)
     {
         if (process->name != NULL)

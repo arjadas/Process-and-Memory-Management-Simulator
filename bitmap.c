@@ -74,6 +74,7 @@ int deallocate_bitmap(bitmap_t *bitmap, memory_t *memory)
     /*
         free memory
     */
+
     // need to find memory to free; end is inclusive
     for (int i = memory->start; i <= memory->end; i++)
     {

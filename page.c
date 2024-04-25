@@ -7,6 +7,10 @@
 
 allocation_t *make_allocation(int size)
 {
+    /*
+        makes an allocation table to map pages to frames
+    */
+
     allocation_t *allocation = (allocation_t *)malloc(sizeof(allocation_t));
     allocation->allocations = (page_t **)malloc(sizeof(page_t *) * size);
     allocation->size = size;
@@ -63,6 +67,7 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
     /*
         free memory from the page table
     */
+   
     // first set pages in allocation block to NOT_SET
     for (int i = 0; i < allocation->size; i++)
     {

@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
     }
     else if (inputs->memory == FIRST_FIT)
     {
-        // task 2 code
+        // task 2
         bitmap_t *bitmap = make_bitmap(T2_SIZE);
         initial_memory_allocation(processes, &num_processes, bitmap);
         scheduler(processes, queue, num_processes, inputs->quantum, &makespan, bitmap);

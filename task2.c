@@ -29,6 +29,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
         scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation,
             if not then they are sent to the back of the queue. uses roundrobin algorithm
     */
+
     int simulation_time = 0;
     int submitted_process = 0;
     int remaining_process = num_process;
@@ -93,7 +94,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
             if (current_process != NULL)
             {
                 change_status(current_process, RUNNING);
-                // if (previous_process != current_process)
+
                 printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.f%%,allocated-at=%d\n",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        ((float)(bitmap->allocated) / T2_SIZE) * 100, current_process->allocation->start); // multiply by 100 for conversion to percentage
@@ -117,8 +118,8 @@ process_t *get_next_process(queue_t *queue, bitmap_t *bitmap)
     /*
         get next process that has been allocated memory, if no memory allocation and
             memory allocation not possible then return NULL
-
     */
+
     process_t *process = NULL, *temp = NULL;
     int i = 0;
     int allocate = 0;
@@ -126,6 +127,7 @@ process_t *get_next_process(queue_t *queue, bitmap_t *bitmap)
     {
         temp = dequeue(queue);
         assert(temp != NULL);
+
         if (temp->allocation->quantity == temp->memory_KB)
         {
             process = temp;
