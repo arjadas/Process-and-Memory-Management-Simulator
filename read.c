@@ -158,6 +158,8 @@ void assign_memory(process_t *process, int management)
         process->page_table->current_amount = 0;
         process->page_table->allocated = FALSE;
         process->page_table->start_frame_index = 0;
+        process->page_table->end_frame_index = NOT_SET;
+        process->page_table->available_start_index = NOT_SET;
 
         // set the ids to NOT_SET
         for (int i = 0; i < process->page_table->amount; i++)

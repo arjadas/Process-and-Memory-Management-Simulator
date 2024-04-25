@@ -95,6 +95,7 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
             if (current_process != NULL)
             {
                 change_status(current_process, RUNNING);
+                // current_process->last_executed = simulation_time;
                 percentage = ceil((100 * (float)((allocation->size) - (allocation->vacancies)) / allocation->size));
                 printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.0f%%,",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
@@ -106,6 +107,7 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
         if (current_process != NULL && current_process->remaining_time > 0)
         {
             (current_process->remaining_time -= quantum);
+            current_process->last_executed = simulation_time;
         }
 
         // update simulation time
