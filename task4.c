@@ -85,7 +85,7 @@ void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_pro
                 printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.0f%%,",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        percentage);
-                print_table(current_process->page_table);
+                print_table_virtual(current_process->page_table);
             }
         }
 
@@ -99,6 +99,23 @@ void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_pro
     }
 
     *makespan = simulation_time;
+}
+
+void print_table_virtual(page_table_t *page_table)
+{
+    printf("mem-frames=[");
+    for (int i = 0; i < page_table->amount; i++)
+    {
+        if (i == 0)
+            printf("%d,", page_table->allocation[i]);
+
+        if (i > 0 && page_table->allocation[i] != 0)
+            printf("%d", page_table->allocation[i]);
+
+        if (i > 0 && i + 1 < page_table->amount && page_table->allocation[i + 1] != 0)
+            printf(",");
+    }
+    printf("]\n");
 }
 
 process_t *get_next_paged_process_virtual(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes, int time)
@@ -130,6 +147,8 @@ int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, i
     /*
         in order to allocate memory we search the page table to find vacant pages
     */
+
+    int count = 0;
     // search for block
     /*
     if (allocation->vacancies < page_table->amount)
@@ -140,26 +159,70 @@ int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, i
     if (page_table->allocation == NULL)
     {
         page_table->allocation = (int *)malloc(sizeof(int) * page_table->amount);
-    }
 
-    // no change needed as it will only allocate frames until it can
-    for (int i = 0; (i < allocation->size); i++)
-    {
-        if (((allocation->allocations)[i]->id) == -1)
+        /*// allocating for the first time
+        for (int i = 0; (i < allocation->size); i++)
         {
-            (page_table->allocation)[page_table->current_amount] = i;
-            (page_table->current_amount)++;
-            (allocation->allocations)[i]->id = id;
-            (allocation->allocations)[i]->evicted = -1;
-            (allocation->vacancies)--;
+            if (((allocation->allocations)[i]->id) == -1)
+            {
+                (page_table->allocation)[page_table->current_amount] = i;
+                (page_table->current_amount)++;
+                (allocation->allocations)[i]->id = id;
+                (allocation->allocations)[i]->evicted = -1;
+                (allocation->vacancies)--;
+            }
 
-            if ((page_table->amount >= 4 && page_table->current_amount >= 4) || (page_table->amount < 4 && page_table->current_amount == page_table->amount)) // found enough pages
+            if (page_table->amount < 4 && page_table->current_amount == page_table->amount) // found enough pages
             {
                 page_table->allocated = TRUE;
                 return 1;
             }
         }
+
+        if (page_table->amount >= 4 && page_table->current_amount >= 4)
+        {
+            page_table->allocated = TRUE;
+        }
+        return 1;*/
     }
+
+    // printf("%d", page_table->allocation[count]);
+    //  it was already allocated before but now needs reallocation for certain pages
+    for (int i = 0; (i < allocation->size) && count < page_table->amount && (page_table->allocation)[count] == 0; i++)
+    {
+        if (((allocation->allocations)[i]->id) == -1)
+        {
+            (page_table->allocation)[count] = i;
+            count++;
+            (allocation->allocations)[i]->id = id;
+            (allocation->allocations)[i]->evicted = -1;
+            (allocation->vacancies)--;
+
+            if (page_table->amount < 4 && count == page_table->amount) // found enough pages
+            {
+                page_table->allocated = TRUE;
+
+                page_table->current_amount = count;
+
+                return 1;
+            }
+        }
+    }
+
+    if (page_table->current_amount == 0)
+    {
+        page_table->current_amount = count;
+    }
+    else
+    {
+        (page_table->current_amount) += count;
+    }
+
+    if (page_table->amount >= 4 && page_table->current_amount >= 4)
+    {
+        page_table->allocated = TRUE;
+    }
+
     return 0;
 }
 
@@ -175,28 +238,38 @@ int evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, 
 
         // step 3: evict process from pages and allocate pages to new process
 
-        if (evicted->page_table->amount < 4)
-        {
-            deallocate_allocation(allocation, evicted->page_table, evicted->id, time);
-        }
-        else
-        {
-            deallocate_allocation_virtual(allocation, evicted->page_table, evicted->id, time);
-        }
+        deallocate_allocation_virtual(allocation, evicted->page_table, evicted->id, time);
     }
     print_eviction(allocation, time);
 
     // now we have enough pages available
-    allocate_pages(allocation, process->page_table, process->id);
+    allocate_pages_virtual(allocation, process->page_table, process->id);
     return 0;
 }
 
 void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_table, int id, int time)
 {
-    int count = 0;
     /*
         free memory from the page table
     */
+
+    int frame_num = NOT_SET;
+
+    for (int i = 0; i < page_table->amount && allocation->vacancies < 4; i++)
+    {
+
+        // collect frame number and deallocate from page_table
+        frame_num = (page_table->allocation)[i];
+        (page_table->allocation)[i] = -1;
+        (page_table->current_amount)--;
+
+        // deallocate the corresponding frame from allocation
+        (allocation->allocations)[frame_num]->id = -1;
+        (allocation->allocations)[frame_num]->evicted = time;
+        (allocation->vacancies) += 1;
+    }
+
+    /*
     // first set pages in allocation block to -1
     for (int i = 0; i < allocation->size && allocation->vacancies < 4; i++) // here, i represents the frame number in allocation right?
     {
@@ -220,4 +293,5 @@ void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_
         (page_table->current_amount)--;
     }
     page_table->allocated = FALSE;
+    */
 }
