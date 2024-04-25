@@ -22,8 +22,6 @@ int get_average_turnaround(process_t **processes, int num_process)
         total += processes[i]->turnaround_time;
     }
 
-    printf("%lf\n", (total * 1.0) / num_process);
-
     return (round((total * 1.0) / num_process)); // multiply with 1.0 to convert to float before rounding up
 }
 
