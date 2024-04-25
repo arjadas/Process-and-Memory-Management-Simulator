@@ -22,7 +22,7 @@ helperfunctions.o: helperfunctions.c helperfunctions.h process.h
 queue.o: queue.c queue.h process.h 
 	gcc -Wall -o queue.o queue.c -c
 
-read.o: read.c read.h process.h page.h
+read.o: read.c read.h process.h page.h task4.h
 	gcc -Wall -o read.o read.c -c
 
 process.o: process.c process.h memory.h page.h

@@ -81,7 +81,6 @@ process_t *dequeue(queue_t *queue)
     process_t *data = item_node->data;
 
     // deleting the content and freeing the node
-    // we might need to return the node itself instead...
     item_node->data = NULL;
     item_node->next = NULL;
     free(item_node);

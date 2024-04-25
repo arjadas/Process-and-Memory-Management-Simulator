@@ -42,7 +42,7 @@ void round_robin(process_t **processes, queue_t *queue, int num_process, int qua
                 current_process->time_overhead = (current_process->turnaround_time * 1.0) / current_process->service_time; // multiply with 1.0 to convert to float/double
 
                 // no need to enqueue as process is finished
-                // free_process(current_process);
+
                 current_process = NULL;
 
                 if (remaining_process == 0 && is_empty(queue))

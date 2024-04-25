@@ -6,6 +6,7 @@
 #include "process.h"
 #include "memory.h"
 #include "page.h"
+#include "task4.h"
 
 process_t **read_processes(read_t *input, int *num_processes)
 {
@@ -145,20 +146,19 @@ void assign_memory(process_t *process, int management)
     {
         process->allocation = NULL;
         process->page_table = (page_table_t *)malloc(sizeof(page_table_t));
-        if (process->memory_KB % 4 == 0)
+        if (process->memory_KB % MIN_ALLOCATION == 0)
         {
-            pages = (process->memory_KB / 4);
+            pages = (process->memory_KB / MIN_ALLOCATION);
         }
         else
         {
-            pages = (process->memory_KB / 4) + 1;
+            pages = (process->memory_KB / MIN_ALLOCATION) + 1;
         }
         process->page_table->allocation = (int *)malloc(sizeof(int) * pages);
         process->page_table->amount = pages;
         process->page_table->current_amount = 0;
         process->page_table->allocated = FALSE;
         process->page_table->start_frame_index = 0;
-        process->page_table->end_frame_index = NOT_SET;
         process->page_table->available_start_index = NOT_SET;
 
         // set the ids to NOT_SET

@@ -15,7 +15,7 @@ void initial_memory_allocation(process_t **processes, int *num_processes, bitmap
         allocate memory to the first process
     */
     allocate_memory(bitmap, processes[0]);
-} 
+}
 
 void print_process2(process_t *process)
 {
@@ -96,7 +96,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
                 // if (previous_process != current_process)
                 printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.f%%,allocated-at=%d\n",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
-                       ((float)(bitmap->allocated) / 2048)*100, current_process->allocation->start);
+                       ((float)(bitmap->allocated) / T2_SIZE) * 100, current_process->allocation->start); // multiply by 100 for conversion to percentage
             }
         }
 
@@ -122,7 +122,7 @@ process_t *get_next_process(queue_t *queue, bitmap_t *bitmap)
     process_t *process = NULL, *temp = NULL;
     int i = 0;
     int allocate = 0;
-    while (i < queue->length)
+    while (i < get_queue_length(queue))
     {
         temp = dequeue(queue);
         assert(temp != NULL);

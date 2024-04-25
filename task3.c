@@ -22,7 +22,6 @@ void print_process3(process_t *process)
 {
     printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Amount: %d\n",
            process->name, process->arrival_time, process->service_time, process->memory_KB, process->page_table->amount);
-    // print_table(process->page_table);
 }
 
 void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, int *makespan, allocation_t *allocation)

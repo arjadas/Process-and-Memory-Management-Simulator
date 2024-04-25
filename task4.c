@@ -133,7 +133,7 @@ process_t *get_next_paged_process_virtual(queue_t *queue, allocation_t *allocati
     if (process->page_table->allocated != TRUE)
     {
         // first check if there are 4 free pages in the allocation block
-        if ((allocation->vacancies) >= 4 || (process->page_table->amount < 4 && (allocation->vacancies) >= (process->page_table->amount))) // if n=3, then does it have more than 3 frames ?
+        if ((allocation->vacancies) >= MIN_ALLOCATION || (process->page_table->amount < MIN_ALLOCATION && (allocation->vacancies) >= (process->page_table->amount))) // if n=3, then does it have more than 3 frames ?
         {
             allocate_pages_virtual(allocation, process->page_table, process->id);
         }
@@ -152,7 +152,6 @@ int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, i
     */
 
     int count = 0;
-    // search for block
     /*
     if (allocation->vacancies < page_table->amount)
     {
@@ -184,7 +183,7 @@ int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, i
             (allocation->allocations)[i]->evicted = NOT_SET;
             (allocation->vacancies)--;
 
-            if (page_table->amount < 4 && count == page_table->amount) // found enough pages
+            if (page_table->amount < MIN_ALLOCATION && count == page_table->amount) // found enough pages
             {
                 page_table->allocated = TRUE;
                 page_table->start_frame_index = page_table->available_start_index;
@@ -196,18 +195,14 @@ int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, i
     }
 
     if (page_table->current_amount == 0)
-    {
         page_table->current_amount = count;
-    }
-    else
-    {
-        (page_table->current_amount) += count;
-    }
 
-    if (page_table->amount >= 4 && page_table->current_amount >= 4)
-    {
+    else
+        (page_table->current_amount) += count;
+
+    if (page_table->amount >= MIN_ALLOCATION && page_table->current_amount >= MIN_ALLOCATION)
         page_table->allocated = TRUE;
-    }
+
     page_table->start_frame_index = page_table->available_start_index;
 
     return 0;
@@ -217,7 +212,7 @@ int evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, 
 {
     // step 1: evict process from pages and allocate pages to new process
     process_t *evicted = NULL;
-    while (allocation->vacancies < 4)
+    while (allocation->vacancies < MIN_ALLOCATION)
     {
         // step 2: find page that was least recently executed
         evicted = least_recently_executed(processes, num_processes, time);
@@ -242,7 +237,7 @@ void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_
 
     int frame_num = NOT_SET;
 
-    for (int i = page_table->start_frame_index; i < page_table->amount && allocation->vacancies < 4; i++)
+    for (int i = page_table->start_frame_index; i < page_table->amount && allocation->vacancies < MIN_ALLOCATION; i++)
     {
 
         // collect frame number and deallocate from page_table
@@ -259,6 +254,6 @@ void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_
 
     page_table->available_start_index = 0;
 
-    if (page_table->current_amount < 4)
+    if (page_table->current_amount < MIN_ALLOCATION)
         page_table->allocated = FALSE;
 }

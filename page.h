@@ -13,7 +13,6 @@ typedef struct page_table
     int amount;                // the total number of pages required
     int current_amount;        // the number of pages currently allocated
     int start_frame_index;     // the index from which frames are allocated
-    int end_frame_index;       // the index upto which frames are allocated
     int available_start_index; // free slot for reallocating
 } page_table_t;
 
