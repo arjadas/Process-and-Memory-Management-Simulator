@@ -85,7 +85,7 @@ void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_pro
                 change_status(current_process, RUNNING);
 
                 percentage = ceil((100 * (float)((allocation->size) - (allocation->vacancies)) / allocation->size));
-                printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.0f%%,",
+                printf("%d,%s,process-name=%s,remaining-time=%lu,mem-usage=%.0f%%,",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        percentage);
                 print_table_virtual(current_process->page_table);

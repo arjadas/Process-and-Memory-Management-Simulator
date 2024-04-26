@@ -43,7 +43,7 @@ void print_processes(process_t **processes, int num_processes)
 
 void print_process(process_t *process)
 {
-    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n",
+    printf("Process name: %s\n \tArrival time: %lu\n\tService time: %lu\n\tMemory required: %d\n",
            process->name, process->arrival_time, process->service_time, process->memory_KB);
 }
 

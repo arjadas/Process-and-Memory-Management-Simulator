@@ -77,7 +77,7 @@ void round_robin(process_t **processes, queue_t *queue, int num_process, int qua
             current_process = dequeue(queue);
             change_status(current_process, RUNNING);
 
-            printf("%d,%s,process-name=%s,remaining-time=%d\n", simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time);
+            printf("%d,%s,process-name=%s,remaining-time=%lu\n", simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time);
         }
 
         if (current_process != NULL && current_process->remaining_time > 0)

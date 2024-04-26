@@ -19,7 +19,7 @@ void initial_memory_allocation(process_t **processes, int *num_processes, bitmap
 
 void print_process2(process_t *process)
 {
-    printf("Process name: %s\n \tArrival time: %d\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d to %d amount = %d\n",
+    printf("Process name: %s\n \tArrival time: %lu\n\tService time: %lu\n\tMemory required: %d\n Memory allocation: %d to %d amount = %d\n",
            process->name, process->arrival_time, process->service_time, process->memory_KB, process->allocation->start, process->allocation->end, process->allocation->quantity);
 }
 
@@ -95,7 +95,7 @@ void scheduler(process_t **processes, queue_t *queue, int num_process, int quant
             {
                 change_status(current_process, RUNNING);
 
-                printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.f%%,allocated-at=%d\n",
+                printf("%d,%s,process-name=%s,remaining-time=%lu,mem-usage=%.f%%,allocated-at=%d\n",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        ((float)(bitmap->allocated) / T2_SIZE) * 100, current_process->allocation->start); // multiply by 100 for conversion to percentage
             }

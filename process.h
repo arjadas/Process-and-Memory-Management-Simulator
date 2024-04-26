@@ -12,11 +12,11 @@ typedef struct
 {
     char *name;
     int id;
-    int arrival_time;
-    int remaining_time;
-    int last_executed;
+    unsigned long int arrival_time;
+    unsigned long int remaining_time;
+    unsigned long int last_executed;
     unsigned long int service_time; // check data type
-    int completion_time;
+    unsigned long int completion_time;
     int turnaround_time;
     double time_overhead; // data type - double
     int memory_KB;
