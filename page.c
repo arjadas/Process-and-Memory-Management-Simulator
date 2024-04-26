@@ -30,11 +30,11 @@ void allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
         in order to allocate memory we search the page table to find vacant pages
     */
 
-    // search for block
-    /*if (allocation->vacancies < page_table->amount)
+    // search for block, might not be very useful as already making sure before this function is called
+    if (allocation->vacancies < page_table->amount)
     {
-        return 0; // i see no use of this condition
-    }*/
+        return;
+    }
 
     // if pages not allocated, then allocate
     if (page_table->allocation == NULL)
@@ -60,7 +60,6 @@ void allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
             }
         }
     }
-    // return 0;
 }
 
 // deallocate memory

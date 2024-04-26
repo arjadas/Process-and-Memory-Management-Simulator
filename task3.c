@@ -135,7 +135,6 @@ void evict_and_allocate(allocation_t *allocation, process_t **processes, int num
 
     // now we have enough pages available
     allocate_pages(allocation, process->page_table, process->id);
-    // return 0;
 }
 
 process_t *least_recently_executed(process_t **processes, int num_processes, int time)

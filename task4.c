@@ -153,11 +153,11 @@ void allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, 
     */
 
     int count = 0;
-    /*
+
     if (allocation->vacancies < page_table->amount)
     {
-        return 0; // i see no use of this condition
-    }*/
+        return; // might not be useful as already making sure before this function is called
+    }
 
     if (page_table->allocation == NULL)
     {
@@ -203,8 +203,6 @@ void allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, 
         page_table->allocated = TRUE;
 
     page_table->start_frame_index = page_table->available_start_index;
-
-    // return 0;
 }
 
 void evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
@@ -225,7 +223,6 @@ void evict_and_allocate_virtual(allocation_t *allocation, process_t **processes,
 
     // now we have enough pages available
     allocate_pages_virtual(allocation, process->page_table, process->id);
-    // return 0;
 }
 
 void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_table, int id, int time)
