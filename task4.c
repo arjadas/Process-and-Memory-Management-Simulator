@@ -154,11 +154,6 @@ void allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, 
 
     int count = 0;
 
-    if (allocation->vacancies < page_table->amount)
-    {
-        return; // might not be useful as already making sure before this function is called
-    }
-
     if (page_table->allocation == NULL)
     {
         page_table->allocation = (int *)malloc(sizeof(int) * page_table->amount);
