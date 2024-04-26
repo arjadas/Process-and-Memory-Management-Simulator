@@ -82,7 +82,10 @@ void round_robin(process_t **processes, queue_t *queue, int num_process, int qua
 
         if (current_process != NULL && current_process->remaining_time > 0)
         {
-            (current_process->remaining_time -= quantum);
+            if (current_process->remaining_time >= quantum)
+                (current_process->remaining_time -= quantum);
+            else
+                current_process->remaining_time = 0;
         }
 
         // update simulation time
