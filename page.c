@@ -24,7 +24,7 @@ allocation_t *make_allocation(int size)
     return allocation;
 }
 
-int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
+void allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
 {
     /*
         in order to allocate memory we search the page table to find vacant pages
@@ -56,11 +56,11 @@ int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
             if ((page_table->current_amount == page_table->amount)) // found enough pages, all pages allocated
             {
                 page_table->allocated = TRUE;
-                return 1;
+                return;
             }
         }
     }
-    return 0;
+    // return 0;
 }
 
 // deallocate memory

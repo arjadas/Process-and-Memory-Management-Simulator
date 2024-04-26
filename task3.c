@@ -64,7 +64,7 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
                 current_process->completion_time = simulation_time; //  time of completion for the process
                 current_process->turnaround_time = simulation_time - current_process->arrival_time;
                 current_process->time_overhead = (current_process->turnaround_time * 1.0) / current_process->service_time; // multiply with 1.0 to convert to float/double
-                
+
                 deallocate_allocation(allocation, current_process->page_table, current_process->id, simulation_time);
                 print_eviction(allocation, simulation_time);
                 printf("%d,%s,process-name=%s,proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
@@ -96,7 +96,7 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
             if (current_process != NULL)
             {
                 change_status(current_process, RUNNING);
-                
+
                 percentage = ceil((100 * (float)((allocation->size) - (allocation->vacancies)) / allocation->size));
                 printf("%d,%s,process-name=%s,remaining-time=%d,mem-usage=%.0f%%,",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
@@ -118,7 +118,7 @@ void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, i
     *makespan = simulation_time;
 }
 
-int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
+void evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
 {
     // step 1: evict process from pages and allocate pages to new process
     process_t *evicted = NULL;
@@ -135,7 +135,7 @@ int evict_and_allocate(allocation_t *allocation, process_t **processes, int num_
 
     // now we have enough pages available
     allocate_pages(allocation, process->page_table, process->id);
-    return 0;
+    // return 0;
 }
 
 process_t *least_recently_executed(process_t **processes, int num_processes, int time)
@@ -164,7 +164,7 @@ process_t *get_next_paged_process(queue_t *queue, allocation_t *allocation, proc
         get next process that has been allocated memory, if no memory allocation and
             memory allocation not possible then return NULL
     */
-   
+
     process_t *process = NULL;
     process = dequeue(queue);
     if (process->page_table->allocated != TRUE)

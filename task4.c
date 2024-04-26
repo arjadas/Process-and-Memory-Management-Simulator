@@ -146,7 +146,7 @@ process_t *get_next_paged_process_virtual(queue_t *queue, allocation_t *allocati
     return process;
 }
 
-int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, int id)
+void allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, int id)
 {
     /*
         in order to allocate memory we search the page table to find vacant pages
@@ -189,7 +189,7 @@ int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, i
                 page_table->start_frame_index = page_table->available_start_index;
                 page_table->current_amount = count;
 
-                return 1;
+                return;
             }
         }
     }
@@ -204,10 +204,10 @@ int allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, i
 
     page_table->start_frame_index = page_table->available_start_index;
 
-    return 0;
+    // return 0;
 }
 
-int evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
+void evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
 {
     // step 1: evict process from pages and allocate pages to new process
     process_t *evicted = NULL;
@@ -225,7 +225,7 @@ int evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, 
 
     // now we have enough pages available
     allocate_pages_virtual(allocation, process->page_table, process->id);
-    return 0;
+    // return 0;
 }
 
 void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_table, int id, int time)
