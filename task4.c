@@ -208,7 +208,7 @@ void evict_and_allocate_virtual(allocation_t *allocation, process_t **processes,
 {
     // step 1: evict process from pages and allocate pages to new process
     process_t *evicted = NULL;
-    while (allocation->vacancies < MIN_ALLOCATION)
+    while ((process->page_table->amount >= MIN_ALLOCATION && allocation->vacancies < MIN_ALLOCATION) || (process->page_table->amount < MIN_ALLOCATION && allocation->vacancies < process->page_table->amount))
     {
         // step 2: find page that was least recently executed
         evicted = least_recently_executed(processes, num_processes, time);
@@ -232,9 +232,8 @@ void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_
 
     int frame_num = NOT_SET;
 
-    for (int i = page_table->start_frame_index; i < page_table->amount && allocation->vacancies < MIN_ALLOCATION; i++)
+    for (int i = page_table->start_frame_index; i < page_table->amount; i++)
     {
-
         // collect frame number and deallocate from page_table
         frame_num = (page_table->allocation)[i];
         (page_table->allocation)[i] = NOT_SET;
@@ -245,7 +244,11 @@ void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_
         (allocation->allocations)[frame_num]->id = NOT_SET;
         (allocation->allocations)[frame_num]->evicted = time;
         (allocation->vacancies) += 1;
-    }
+
+        // break if the condition is met
+        if ((page_table->amount >= MIN_ALLOCATION && allocation->vacancies == MIN_ALLOCATION) || (page_table->amount < MIN_ALLOCATION && allocation->vacancies == page_table->amount))
+            break;
+        }
 
     // after pages are deallocated the slots from the beginning of page table become free
     page_table->available_start_index = 0;
