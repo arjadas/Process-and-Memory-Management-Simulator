@@ -36,11 +36,13 @@ int allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
         return 0; // i see no use of this condition
     }
 
+    // if pages not allocated, then allocate
     if (page_table->allocation == NULL)
     {
         page_table->allocation = (int *)malloc(sizeof(int) * page_table->amount);
     }
 
+    // find and allocate pages to process
     for (int i = 0; (i < allocation->size); i++)
     {
         if (((allocation->allocations)[i]->id) == NOT_SET)
@@ -67,7 +69,7 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
     /*
         free memory from the page table
     */
-   
+
     // first set pages in allocation block to NOT_SET
     for (int i = 0; i < allocation->size; i++)
     {
@@ -88,8 +90,11 @@ void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, i
     page_table->allocated = FALSE;
 }
 
-// destroy table not necessary as was statically allocated.
 void destroy_table(allocation_t *allocation)
+/*
+    destroy table (i.e. free memory :) )
+*/
+
 {
     if (allocation != NULL)
     {

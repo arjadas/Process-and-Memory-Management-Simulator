@@ -2,10 +2,11 @@
 #define BITMAP_H
 #include "process.h"
 
-typedef struct {
-    int* bitmap;
-    int allocated;  
-    int size;
+typedef struct
+{
+    int *bitmap;   // array to store 1 or 0 depending on allocation
+    int allocated; // number of units allocated
+    int size;      // the size of the entire bitmap (array)
 } bitmap_t;
 
 bitmap_t *make_bitmap(int size);

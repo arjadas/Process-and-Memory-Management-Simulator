@@ -80,7 +80,7 @@ process_t **resize_processes(process_t **processes, int *size)
 void add_buffer(char *buffer, int i, char letter)
 {
     /*
-        only want to add letter to buffer if it is not white space
+        only want to add letter to buffer if it is not white space to the buffer
     */
 
     if ((letter != '\n') && (letter != ' ') && (letter != EOF))
@@ -91,6 +91,9 @@ void add_buffer(char *buffer, int i, char letter)
 
 void parse_value(process_t *process, char *buffer, enum Input column)
 {
+    /*
+        parse the buffer to the relevant entry in the process_t struct
+    */
     switch (column)
     {
     case ARRIVAL:
@@ -128,7 +131,7 @@ void parse_value(process_t *process, char *buffer, enum Input column)
 void assign_memory(process_t *process, int management)
 {
     /*
-        allocates memory depending on the memory management strategy
+        allocates memory depending on the memory management strategy (i.e. infinite, contiguous, paged)
     */
 
     int pages = 0;
