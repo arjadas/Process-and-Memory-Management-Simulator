@@ -31,10 +31,10 @@ void allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
     */
 
     // search for block
-    if (allocation->vacancies < page_table->amount)
+    /*if (allocation->vacancies < page_table->amount)
     {
         return 0; // i see no use of this condition
-    }
+    }*/
 
     // if pages not allocated, then allocate
     if (page_table->allocation == NULL)
