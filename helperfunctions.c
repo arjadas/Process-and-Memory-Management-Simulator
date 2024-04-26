@@ -22,7 +22,7 @@ int get_average_turnaround(process_t **processes, int num_process)
         total += processes[i]->turnaround_time;
     }
 
-    return (round((total * 1.0) / num_process)); // multiply with 1.0 to convert to float before rounding up
+    return (ceil((total * 1.0) / num_process)); // multiply with 1.0 to convert to float before rounding up
 }
 
 double get_max_time_overhead(process_t **processes, int num_process)
