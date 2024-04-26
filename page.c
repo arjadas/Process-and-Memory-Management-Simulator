@@ -63,7 +63,7 @@ void allocate_pages(allocation_t *allocation, page_table_t *page_table, int id)
 }
 
 // deallocate memory
-void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, int id, int time)
+void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, int id, unsigned long int time)
 {
     /*
         free memory from the page table
@@ -130,13 +130,13 @@ void print_table(page_table_t *page_table)
     printf("%d]\n", page_table->allocation[page_table->amount - 1]);
 }
 
-void print_eviction(allocation_t *allocation, int time)
+void print_eviction(allocation_t *allocation, unsigned long int time)
 {
     /*
         prints this: <time>,EVICTED,evicted-frames=<[frames]>
     */
 
-    printf("%d,EVICTED,evicted-frames=[", time);
+    printf("%lu,EVICTED,evicted-frames=[", time);
     int num_printed = 1, num_pages = 0;
     for (int i = 0; i < allocation->size; i++)
     {

@@ -11,9 +11,9 @@
 
 void initial_page_allocation(process_t **processes, allocation_t *allocation);
 void print_process3(process_t *process);
-void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, int *makespan, allocation_t *allocation);
-process_t *least_recently_executed(process_t **processes, int num_processes, int time);
-void evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time);
-process_t *get_next_paged_process(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes, int time);
+void paged_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, unsigned long int *makespan, allocation_t *allocation);
+process_t *least_recently_executed(process_t **processes, int num_processes, unsigned long int time);
+void evict_and_allocate(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, unsigned long int time);
+process_t *get_next_paged_process(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes, unsigned long int time);
 
 #endif

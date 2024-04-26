@@ -11,14 +11,14 @@
 #include "task3.h"
 #include "task4.h"
 
-void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, int *makespan, allocation_t *allocation)
+void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_processes, int quantum, unsigned long int *makespan, allocation_t *allocation)
 {
     /*
         scheduler: allocates processes in queue CPU time for one quantum if they have a memory allocation,
             if not then they are sent to the back of the queue. uses roundrobin algorithm
     */
 
-    int simulation_time = 0;
+    unsigned long int simulation_time = 0;
     int submitted_process = 0;
     int remaining_process = num_processes;
     int ready_process_remaining = 0;
@@ -54,7 +54,7 @@ void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_pro
 
                 deallocate_allocation(allocation, current_process->page_table, current_process->id, simulation_time);
                 print_eviction(allocation, simulation_time);
-                printf("%d,%s,process-name=%s,proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
+                printf("%lu,%s,process-name=%s,proc-remaining=%d\n", simulation_time, get_status_string(current_process), current_process->name, ready_process_remaining);
                 current_process = NULL;
 
                 if (remaining_process == 0 && is_empty(queue))
@@ -85,7 +85,7 @@ void virtual_memory_scheduler(process_t **processes, queue_t *queue, int num_pro
                 change_status(current_process, RUNNING);
 
                 percentage = ceil((100 * (float)((allocation->size) - (allocation->vacancies)) / allocation->size));
-                printf("%d,%s,process-name=%s,remaining-time=%lu,mem-usage=%.0f%%,",
+                printf("%lu,%s,process-name=%s,remaining-time=%lu,mem-usage=%.0f%%,",
                        simulation_time, get_status_string(current_process), current_process->name, current_process->remaining_time,
                        percentage);
                 print_table_virtual(current_process->page_table);
@@ -126,7 +126,7 @@ void print_table_virtual(page_table_t *page_table)
         printf("]\n");
 }
 
-process_t *get_next_paged_process_virtual(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes, int time)
+process_t *get_next_paged_process_virtual(queue_t *queue, allocation_t *allocation, process_t **processes, int num_processes, unsigned long int time)
 {
     /*
         get next process that has been allocated memory, if no memory allocation and
@@ -204,7 +204,7 @@ void allocate_pages_virtual(allocation_t *allocation, page_table_t *page_table, 
     page_table->start_frame_index = page_table->available_start_index;
 }
 
-void evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, int time)
+void evict_and_allocate_virtual(allocation_t *allocation, process_t **processes, int num_processes, process_t *process, unsigned long int time)
 {
     // step 1: evict process from pages and allocate pages to new process
     process_t *evicted = NULL;
@@ -224,7 +224,7 @@ void evict_and_allocate_virtual(allocation_t *allocation, process_t **processes,
     allocate_pages_virtual(allocation, process->page_table, process->id);
 }
 
-void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_table, int id, int time)
+void deallocate_allocation_virtual(allocation_t *allocation, page_table_t *page_table, int id, unsigned long int time)
 {
     /*
         free memory from the page table

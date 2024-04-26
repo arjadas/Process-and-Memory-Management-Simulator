@@ -17,7 +17,7 @@ typedef struct
     unsigned long int last_executed;
     unsigned long int service_time; // check data type
     unsigned long int completion_time;
-    int turnaround_time;
+    unsigned long int turnaround_time;
     double time_overhead; // data type - double
     int memory_KB;
     int status;

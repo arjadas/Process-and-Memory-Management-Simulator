@@ -31,10 +31,10 @@ typedef struct
 
 allocation_t *make_allocation(int size);
 void allocate_pages(allocation_t *allocation, page_table_t *page_table, int id);
-void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, int id, int time);
+void deallocate_allocation(allocation_t *allocation, page_table_t *page_table, int id, unsigned long int time);
 void destroy_table(allocation_t *allocation);
 void print_table(page_table_t *page_table);
-void print_eviction(allocation_t *allocation, int time);
+void print_eviction(allocation_t *allocation, unsigned long int time);
 void print_allocation(allocation_t *allocation);
 
 #endif
